@@ -8,9 +8,6 @@ sys.path.append(mp.dir_ta)
 
 from ta_indicators import analyze
 
-def select_operation(i):
-    {'1': 'hi', '2': analyze(), '3': 'he'}.get(i)
-
 if __name__ == "__main__":
     print('Welcome to the investment information feed(iif) system!')
     print('*******************************************************')
@@ -24,4 +21,12 @@ if __name__ == "__main__":
         print('1) Assets Management')
         print('2) Technical Analysis')
         print('3) Market News')
-        select_operation(input())
+        ope = input()
+        if ope == '1':
+            print('1')
+        elif ope == '2':
+            analyze()
+        elif ope == '3':
+            print('3')
+        else:
+            print('Please enter a valid input')
