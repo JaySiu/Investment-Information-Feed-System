@@ -3,7 +3,10 @@ Entry point of the investment information feed system
 
 Dependent-modules/packages:
     - Anaconda Python
-    -
+    - talib: $conda install -c quantopian ta-lib
+    - selenium: $conda install -c anaconda selenium
+    - chromeDriver
+
 '''
 
 import sys
