@@ -38,6 +38,10 @@ def remove_comma(str):
     return str.replace(',', '')
 
 
+def remove_nan(arr):
+    return arr[~np.isnan(arr)]
+
+
 def parse_HSI_data(text):
     print("Parsing HSI data...")
     global df
@@ -65,7 +69,7 @@ def update_HSI_data():
     driver = webdriver.Chrome(chrome_options=options)
     driver.get('https://finance.yahoo.com/quote/%5EHSI/history?p=%5EHSI')
     time.sleep(SLEEP_TIME*3)
-    for i in range(5):
+    for i in range(10):
         try:
             print(".")
             driver.execute_script("window.scrollTo(0, 200000);")
@@ -83,7 +87,6 @@ def update_HSI_data():
 
     global df
     close_prices = np.array(parse_HSI_data(text), dtype='f8')
-    print(close_prices)
     print("Saving...")
     print("\n")
     df.to_csv(mp.dir_data + '^HSI.csv', index=False, encoding='utf_8_sig')
@@ -98,14 +101,25 @@ def retrieve_HSI_data():
 def calculate_macd(close_prices, fast=12, slow=26, signal=9):
     print("Calculating MACD...")
     print("Fast: {}-days; Slow: {}-days; Signal: {}-days".format(fast, slow, signal))
-    print("Select your Moving Average Type:")
+    print("Select your Moving Average type:")
     type = input("(SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3)").upper()
-    avg_fast = talib.MA(close_prices, timeperiod=fast, matype=1)[-1]
-    avg_slow = talib.MA(close_prices, slow, matype=ma_type[type])[-1]
-    avg_signal = talib.MA(close_prices, signal, matype=ma_type[type])[-1]
-    plt.plot(str(fast)+'-days', avg_fast)
-    plt.plot(str(slow)+'-days', avg_slow)
-    plt.plot(str(signal)+'-days', avg_signal)
+    avg_fast = talib.MA(close_prices, timeperiod=fast, matype=ma_type[type])
+    avg_fast = remove_nan(avg_fast)
+    #print(avg_fast)
+    avg_slow = talib.MA(close_prices, timeperiod=slow, matype=ma_type[type])
+    avg_slow = remove_nan(avg_slow)
+    #print(avg_slow)
+    avg_signal = talib.MA(close_prices, timeperiod=signal, matype=ma_type[type])
+    avg_signal = remove_nan(avg_signal)
+    #print(avg_signal)
+
+    #fig = plt.figure()
+    #ax = fig.add_subplot(1,1,1)
+    plt.plot(close_prices)
+    plt.plot(avg_fast)
+    plt.plot(avg_slow)
+    plt.plot(avg_signal)
+    plt.show()
 
 
 ################################################################################
@@ -117,7 +131,9 @@ def macd_HSI():
     #start = end - datetime.timedelta(weeks=52)
     update = input("Do you want to update HSI data? [y/n]").lower()
     print("Fast period: (days)")
-    fast = input("Enter d to use default: 12(fast), 26(slow), 9(signal)").lower()
+    print("[Enter d to use default: 12(fast), 26(slow), 9(signal)]")
+    fast = input().lower()
+    print("\n")
     if update == 'y':
         if fast == 'd':
             calculate_macd(update_HSI_data())
