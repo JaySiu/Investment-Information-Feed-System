@@ -28,7 +28,7 @@ ma_type = {'SMA': 0 , 'EMA': 1, 'WMA': 2, 'DEMA': 3, 'TEMA': 4, 'TRIMA': 5, 'KAM
 ##### helpers ##################################################################
 
 def check_HSI_data_exist():
-    if os.path.exists(r'\\ifsf03\team\RDTeam\Research\Project\iifv2\data\^HSI.csv'):
+    if os.path.exists('data/^HSI.csv'):
         return True
     else:
         return False
@@ -133,29 +133,39 @@ def macd_HSI():
     print("Fast period: (days)")
     print("[Enter d to use default: 12(fast), 26(slow), 9(signal)]")
     fast = input().lower()
-    print("\n")
     if update == 'y':
         if fast == 'd':
+            print("\n")
             calculate_macd(update_HSI_data())
         else:
             slow = input("Slow period: (days)")
             signal = input("Signal: (days)")
-            calculate_macd(update_HSI_data(), fast, slow, signal)
+            print("\n")
+            calculate_macd(update_HSI_data(), int(fast), int(slow), int(signal))
     elif update == 'n' and check_HSI_data_exist():
         if fast == 'd':
+            print("Fetching existing data...")
+            print("\n")
             calculate_macd(retrieve_HSI_data())
         else:
             slow = input("Slow period: (days)")
             signal = input("Signal: (days)")
-            calculate_macd(retrieve_HSI_data(), fast, slow, signal)
+            print("Fetching existing data...")
+            print("\n")
+            calculate_macd(retrieve_HSI_data(), int(fast), int(slow), int(signal))
     elif update == 'n' and not check_HSI_data_exist():
-        print("No existing data!")
         if fast == 'd':
+            print("No existing data!")
+            print("\n")
             calculate_macd(update_HSI_data())
         else:
             slow = input("Slow period: (days)")
             signal = input("Signal: (days)")
-            calculate_macd(update_HSI_data(), fast, slow, signal)
+            print("No existing data!")
+            print("\n")
+            calculate_macd(update_HSI_data(), int(fast), int(slow), int(signal))
+    else:
+        print("Error!")
 
 
     print("Finish")
