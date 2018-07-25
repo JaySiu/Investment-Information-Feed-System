@@ -78,7 +78,7 @@ def update_HSI_data():
             break
 
     time.sleep(SLEEP_TIME)
-    source_code = driver.page_source        # $chcp 65001 command may be needed
+    source_code = driver.page_source        # $chcp 65001 command may be needed for pritning
     start_index = source_code.find('Download Data')
     table_index = source_code.find('<table class=', start_index)
     end_index = source_code.find('</tr></tfoot></table>', table_index)
@@ -94,7 +94,11 @@ def update_HSI_data():
     return close_prices
 
 
-def retrieve_HSI_data():
+def retrieve_HSI_Date():
+    return np.array(pd.read_csv(mp.dir_data + '^HSI.csv').Date)
+
+
+def retrieve_HSI_Close():
     return np.array(pd.read_csv(mp.dir_data + '^HSI.csv').Close.apply(remove_comma), dtype='f8')
 
 
@@ -104,21 +108,50 @@ def calculate_macd(close_prices, fast=12, slow=26, signal=9):
     print("Select your Moving Average type:")
     type = input("(SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3)").upper()
     avg_fast = talib.MA(close_prices, timeperiod=fast, matype=ma_type[type])
-    avg_fast = remove_nan(avg_fast)
+    #avg_fast = remove_nan(avg_fast)
     #print(avg_fast)
     avg_slow = talib.MA(close_prices, timeperiod=slow, matype=ma_type[type])
-    avg_slow = remove_nan(avg_slow)
+    #avg_slow = remove_nan(avg_slow)
     #print(avg_slow)
-    avg_signal = talib.MA(close_prices, timeperiod=signal, matype=ma_type[type])
-    avg_signal = remove_nan(avg_signal)
+    macd = avg_fast - avg_slow
+    avg_signal = talib.MA(macd, timeperiod=signal, matype=ma_type[type])
+    #avg_signal = remove_nan(avg_signal)
     #print(avg_signal)
+    histogram = macd - avg_signal
 
-    #fig = plt.figure()
-    #ax = fig.add_subplot(1,1,1)
-    plt.plot(close_prices)
-    plt.plot(avg_fast)
-    plt.plot(avg_slow)
-    plt.plot(avg_signal)
+
+    plot_HSI_MACD(close_prices, avg_fast, avg_slow, avg_signal, macd, histogram, fast, slow, signal, type)
+
+
+def plot_HSI_MACD(close_prices, avg_fast, avg_slow, avg_signal, macd, histogram, fast, slow, signal, type):
+    #date_HSI = retrieve_HSI_Date()
+    #print(date_HSI)
+    fig, ax_list = plt.subplots(2, 2)
+    plt.suptitle('MACD-related plots using {}'.format(type), fontsize = 20, fontweight='bold')
+
+    ax_list[0][0].set_title('{}-days and {}-days Moving Average'.format(fast, slow), fontstyle='italic')
+    ax_list[0][0].plot(close_prices, label='^HSI')
+    ax_list[0][0].plot(avg_fast, label=str(fast)+'-days(fast)')
+    ax_list[0][0].plot(avg_slow, label=str(slow)+'-days(slow)')
+    ax_list[0][0].legend()
+    ax_list[0][0].grid(True)
+
+    ax_list[0][1].set_title('MACD/DIF', fontstyle='italic')
+    ax_list[0][1].plot(macd, label='{}-days - {}-days'.format(fast, slow), color='xkcd:purple')
+    ax_list[0][1].legend()
+    ax_list[0][1].grid(True)
+
+    ax_list[1][0].set_title('MACD/DIF & {}day-Signal', fontstyle='italic')
+    ax_list[1][0].plot(macd, label='MACD/DIF', color='xkcd:purple')
+    ax_list[1][0].plot(avg_signal, label='Signal', color='xkcd:orange')
+    ax_list[1][0].legend()
+    ax_list[1][0].grid(True)
+
+    ax_list[1][1].set_title('MACD Histogram', fontstyle='italic')
+    ax_list[1][1].hist(remove_nan(histogram), label='MACD/DIF - Signal', color='C9')
+    ax_list[1][1].legend()
+    ax_list[1][1].grid(True)
+
     plt.show()
 
 
@@ -146,13 +179,13 @@ def macd_HSI():
         if fast == 'd':
             print("Fetching existing data...")
             print("\n")
-            calculate_macd(retrieve_HSI_data())
+            calculate_macd(retrieve_HSI_Close())
         else:
             slow = input("Slow period: (days)")
             signal = input("Signal: (days)")
             print("Fetching existing data...")
             print("\n")
-            calculate_macd(retrieve_HSI_data(), int(fast), int(slow), int(signal))
+            calculate_macd(retrieve_HSI_Close(), int(fast), int(slow), int(signal))
     elif update == 'n' and not check_HSI_data_exist():
         if fast == 'd':
             print("No existing data!")
