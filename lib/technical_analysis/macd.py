@@ -29,20 +29,33 @@ SLEEP_TIME = 1
 df = pd.DataFrame(columns = ['Date', 'Open',  'High', 'Low', 'Close', 'Adj Close', 'Volume'])
 ma_type = {'SMA': 0 , 'EMA': 1, 'WMA': 2, 'DEMA': 3, 'TEMA': 4, 'TRIMA': 5, 'KAMA': 6, 'MAMA': 7, 'T3': 8}
 stock_Date = ''
-ticker_dict = {}
+ticker_dict_country = {}
 
 ##### helpers ##################################################################
+
+def check_stock_data_exit(ticker):
+    if os.path.exists('data/{}.csv'.format(ticker)):
+        os.remove('data/{}.csv'.format(ticker))
+        return False
+    else:
+        return True
+
+
+def check_ticker(ticker):
+    ticker_df = pd.read_csv(mp.dir_ta + 'Yahoo_Ticker_Symbols_Sep2017.csv')
+    ticker_dict = dict(zip(ticker_df.Ticker, ticker_df.Name))
+    return ticker_dict[ticker]
 
 def check_ticker(country):
     ticker_df = pd.read_csv(mp.dir_ta + 'Yahoo_Ticker_Symbols_Sep2017.csv')
     ticker_df = ticker_df[ticker_df.Country == country].sort_values(by='Ticker')
     #ticker_df = ticker_df.set_index('Ticker')['value'].to_dict()
-    global tiker_dict
-    ticker_dict = dict(zip(ticker_df.Ticker, ticker_df.Name))
-    keys = list(ticker_dict.keys())
+    global ticker_dict_country
+    ticker_dict_country = dict(zip(ticker_df.Ticker, ticker_df.Name))
+    keys = list(ticker_dict_country.keys())
     keys.sort()
     for k in keys:
-        print(k, ticker_dict[k])            # $chcp 65001 may be needed
+        print(k, ticker_dict_country[k])            # $chcp 65001 may be needed
 
 
 def check_HSI_data_exist():
@@ -139,7 +152,7 @@ def calculate_macd(arr_date, close_prices, ticker, fast=12, slow=26, signal=9):
 
 def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal, histogram, ticker, fast=12, slow=26, signal=9, type='EMA'):
     fig, ax_list = plt.subplots(2, 2)
-    plt.suptitle('MACD-related plots of {}'.format(ticker), fontsize = 20, fontweight='bold')
+    plt.suptitle('MACD-related plots of {}({})'.format(check_ticker(ticker), ticker), fontsize = 20, fontweight='bold')
 
     ax_list[0][0].set_title('{}-days and {}-days {}'.format(fast, slow, type), fontstyle='italic')
     ax_list[0][0].plot(arr_date, close_prices, label='^HSI', color='black')
@@ -186,6 +199,7 @@ def macd_stocks(ticker):
     start = end - datetime.timedelta(weeks=104)
     global stock_Date
     stock_df = yf.download(ticker, start=start, end=end)    # DataFrame
+    print(check_stock_data_exit(ticker))
     stock_df.to_csv(mp.dir_data + ticker + '.csv', index=False, encoding='utf_8_sig')
     time.sleep(SLEEP_TIME*3)
     print("***Stock data saved***")
@@ -273,6 +287,7 @@ def macd():
             check_ticker('China')
         else:
             print("\n")
+            print(ticker)
             macd_stocks(ticker)
 
     print("Finish")
