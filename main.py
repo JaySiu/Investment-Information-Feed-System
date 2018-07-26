@@ -5,7 +5,10 @@ Dependent-modules/packages:
     - Anaconda Python
     - talib: $conda install -c quantopian ta-lib
     - selenium: $conda install -c anaconda selenium
-    - chromeDriver
+    - fix_yahoo_finance: $pip install fix_yahoo_finance --upgrade --no-cache-dir
+    - chromeDriver:
+        macOS: place it in /usr/local/table_index
+        Windows: put it under the ~main.py~'s directory
 
 '''
 
@@ -23,8 +26,10 @@ if __name__ == '__main__':
     print("2) client")
     iden = input()
     if iden == '1':
-        while True:
+        ope = ''
+        while ope != 'q':
             print("*******************************************************")
+            print("To quit: type 'q'")
             print("Choose an operation:")
             print("1) Assets Management")
             print("2) Technical Analysis")
@@ -36,5 +41,7 @@ if __name__ == '__main__':
                 analyze()
             elif ope == '3':
                 print('3')
+            elif ope == 'q':
+                break
             else:
                 print("Please enter a valid input")

@@ -4,9 +4,9 @@ for the clients
 '''
 
 import time
-from macd import macd_HSI
+from macd import macd
 
-indicators = {'1': 'MACD', '2':'RSI'}
+indicators = {'1': 'MACD', '2':'RSI', '3': 'B-Bands', '4': 'KD', '5':'KDJ'}
 
 def analyze():
     print("*******************************************************")
@@ -25,7 +25,7 @@ def analyze():
         for c in choices:
             c = c.strip()
             if indicators[c] == 'MACD':
-                macd_HSI()
+                macd()
             elif indicators[c] == 'RSI':
                 print('RSI')
             elif indicators[c] == 'BBAND':
