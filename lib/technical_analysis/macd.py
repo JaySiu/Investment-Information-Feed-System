@@ -33,23 +33,22 @@ ticker_dict_country = {}
 
 ##### helpers ##################################################################
 
-def check_stock_data_exit(ticker):
+def check_stock_data_exist(ticker):
     if os.path.exists('data/{}.csv'.format(ticker)):
         os.remove('data/{}.csv'.format(ticker))
-        return False
-    else:
         return True
+    else:
+        return False
 
 
-def check_ticker(ticker):
+def check_all_ticker(ticker):
     ticker_df = pd.read_csv(mp.dir_ta + 'Yahoo_Ticker_Symbols_Sep2017.csv')
     ticker_dict = dict(zip(ticker_df.Ticker, ticker_df.Name))
     return ticker_dict[ticker]
 
-def check_ticker(country):
+def check_ticker_by_country(country):
     ticker_df = pd.read_csv(mp.dir_ta + 'Yahoo_Ticker_Symbols_Sep2017.csv')
     ticker_df = ticker_df[ticker_df.Country == country].sort_values(by='Ticker')
-    #ticker_df = ticker_df.set_index('Ticker')['value'].to_dict()
     global ticker_dict_country
     ticker_dict_country = dict(zip(ticker_df.Ticker, ticker_df.Name))
     keys = list(ticker_dict_country.keys())
@@ -152,7 +151,10 @@ def calculate_macd(arr_date, close_prices, ticker, fast=12, slow=26, signal=9):
 
 def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal, histogram, ticker, fast=12, slow=26, signal=9, type='EMA'):
     fig, ax_list = plt.subplots(2, 2)
-    plt.suptitle('MACD-related plots of {}({})'.format(check_ticker(ticker), ticker), fontsize = 20, fontweight='bold')
+    if ticker == 'HSI':
+        plt.suptitle('MACD-related plots of {}'.format(ticker), fontsize = 20, fontweight='bold')
+    else:
+        plt.suptitle('MACD-related plots of {}({})'.format(check_all_ticker(ticker), ticker), fontsize = 20, fontweight='bold')
 
     ax_list[0][0].set_title('{}-days and {}-days {}'.format(fast, slow, type), fontstyle='italic')
     ax_list[0][0].plot(arr_date, close_prices, label='^HSI', color='black')
@@ -188,29 +190,32 @@ def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal,
                 for major_tick in ax_list[row][col].xaxis.get_ticklabels():
                     major_tick.set_rotation(43)
 
+    plt.tight_layout()
     plt.show()
 
 
 ################################################################################
 
 def macd_stocks(ticker):
-    print("Fetching the stock data...")
+    print("Fetching {}'s data...".format(check_all_ticker(ticker)))
     end = datetime.datetime.today()
     start = end - datetime.timedelta(weeks=104)
     global stock_Date
     stock_df = yf.download(ticker, start=start, end=end)    # DataFrame
-    print(check_stock_data_exit(ticker))
+    if check_stock_data_exist(ticker):
+        print("Has old data: %s" % True)
+    else:
+        print("Has old data: %s" % False)
     stock_df.to_csv(mp.dir_data + ticker + '.csv', index=False, encoding='utf_8_sig')
     time.sleep(SLEEP_TIME*3)
-    print("***Stock data saved***")
+    print("***Stock data saved/updated***")
     stock_Close = np.array(stock_df.Close, dtype='f8')
     stock_Date = np.array(stock_df.index)
     stock_Date = np.array([datetime.datetime.strptime(str(t)[:10], '%Y-%m-%d').date() for t in stock_Date])
 
 
-    print("Fast period: (days)")
     print("[Enter d to use default: 12(fast), 26(slow), 9(signal)]")
-    fast = input().lower()
+    fast = input("Fast period: (days)").lower()
     if fast == 'd':
         print("\n")
         calculate_macd(stock_Date, stock_Close, ticker)
@@ -225,9 +230,8 @@ def macd_stocks(ticker):
 
 def macd_HSI():
     update = input("Do you want to update HSI data? [y/n]").lower()
-    print("Fast period: (days)")
-    print("[Enter 'd' to use default: 12(fast), 26(slow), 9(signal)]")
-    fast = input().lower()
+    print("[Enter d to use default: 12(fast), 26(slow), 9(signal)]")
+    fast = input("Fast period: (days)").lower()
     if update == 'y':
         if fast == 'd':
             print("\n")
@@ -280,14 +284,13 @@ def macd():
         print("Stock ticker(e.g. 0001.HK): ")
         ticker = input("[Type 'hk' for Hong Kong tickers; 'us' for USA; 'cn' for China]")
         if ticker.lower() == 'hk':
-            check_ticker('Hong Kong')
+            check_ticker_by_country('Hong Kong')
         elif ticker.lower() == 'us':
-            check_ticker('USA')
+            check_ticker_by_country('USA')
         elif ticker.lower() == 'cn':
-            check_ticker('China')
+            check_ticker_by_country('China')
         else:
             print("\n")
-            print(ticker)
             macd_stocks(ticker)
 
     print("Finish")

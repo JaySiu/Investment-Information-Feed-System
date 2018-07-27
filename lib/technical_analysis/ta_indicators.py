@@ -5,8 +5,9 @@ for the clients
 
 import time
 from macd import macd
+#from bbands import bbands
 
-indicators = {'1': 'MACD', '2':'RSI', '3': 'B-Bands', '4': 'KD', '5':'KDJ'}
+indicators = {'1': 'B-Bands', '2': 'CCI', '3':'KDJ', '4': 'MACD', '5':'RSI'}
 
 def analyze():
     print("*******************************************************")
@@ -24,12 +25,17 @@ def analyze():
     else:
         for c in choices:
             c = c.strip()
-            if indicators[c] == 'MACD':
+            if indicators[c] == 'B-Bands':
+                #bbands()
+                print("B-Bands")
+            elif indicators[c] == 'CCI'
+                print("CCI")
+            elif indicators[c] == 'KDJ':
+                print("KDJ")
+            elif indicators[c] == 'MACD':
                 macd()
             elif indicators[c] == 'RSI':
-                print('RSI')
-            elif indicators[c] == 'BBAND':
-                print('BBAND')
+                print("RSI")
 
 
 if __name__ == '__main__':
