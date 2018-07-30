@@ -125,7 +125,7 @@ def calculate_macd(arr_date, close_prices, ticker, fast=12, slow=26, signal=9):
 
 
 def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal, histogram, ticker, fast=12, slow=26, signal=9, type='EMA'):
-    fig, ax_list = plt.subplots(2, 2)
+    fig, ax_list = plt.subplots(2, 2, figsize=(15,10))
     if ticker == 'HSI':
         plt.suptitle('MACD-related plots of {}'.format(ticker), fontsize = 20, fontweight='bold')
     else:
@@ -158,14 +158,11 @@ def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal,
             ax_list[row][col].tick_params(axis='x',which='minor',bottom='off')
             ax_list[row][col].xaxis.set_major_locator(mdates.MonthLocator())
             ax_list[row][col].xaxis.set_major_formatter(mdates.DateFormatter('%y-%b'))
-            if ticker == 'HSI':
-                for major_tick in ax_list[row][col].xaxis.get_ticklabels():
-                    major_tick.set_rotation(20)
-            else:
-                for major_tick in ax_list[row][col].xaxis.get_ticklabels():
-                    major_tick.set_rotation(43)
+            for major_tick in ax_list[row][col].xaxis.get_ticklabels():
+                major_tick.set_rotation(35)
 
-    plt.tight_layout()
+    #plt.tight_layout()          # prevent overlapping
+    fig.subplots_adjust(bottom=0.1)
     plt.show()
 
 
@@ -176,12 +173,14 @@ def macd_stocks(ticker):
     fast = input("Fast period: (days)").lower()
     if fast == 'd':
         print("\n")
-        calculate_macd(*stock.stock_preprocess(ticker), ticker)
+        stock_data = stock.stock_preprocess_arr_list(ticker)
+        calculate_macd(*[stock_data[i] for i in [0, 2]], ticker)
     elif fast.isdigit():
         slow = input("Slow period: (days)")
         signal = input("Signal: (days)")
         print("\n")
-        calculate_macd(*stock.stock_preprocess(ticker), ticker, int(fast), int(slow), int(signal))
+        stock_data = stock.stock_preprocess_arr_list(ticker)
+        calculate_macd(*[stock_data[i] for i in [0, 2]], ticker, int(fast), int(slow), int(signal))
     else:
         print("Error!")
 
