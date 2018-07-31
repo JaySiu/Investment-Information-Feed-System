@@ -45,6 +45,21 @@ def cal_plot_bband(ticker):
     fig.subplots_adjust(hspace=0)
     plt.show()
 
+
+'''
+Other ways to plot:
+    1):
+    # set up subplot grid
+    gridspec.GridSpec(3,3)
+    plt.subplot2grid((3,3), (0,0), colspan=2, rowspan=3)
+    Call the function plt.subplot2grid()
+    Specify the size of the figure’s overall grid, which is 3 rows and 3 columns (3,3)
+    Specify the location of the large subplot: start counting from row 0 column 0 (0,0)
+    Make a subplot across 2 columns and 3 rows colspan=2, rowspan=3.
+
+    2):
+    https://stackoverflow.com/questions/13128647/matplotlib-finance-volume-overlay/13216161
+'''
 ################################################################################
 
 
