@@ -83,7 +83,7 @@ def update_HSI_data():
             break
 
     time.sleep(SLEEP_TIME)
-    source_code = driver.page_source        # $chcp 65001 command may be needed for pritning
+    source_code = driver.page_source        # $chcp 65001 command may be needed for printing
     start_index = source_code.find('Download Data')
     table_index = source_code.find('<table class=', start_index)
     end_index = source_code.find('</tr></tfoot></table>', table_index)
