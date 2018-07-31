@@ -59,6 +59,7 @@ Other ways to plot:
 
     2):
     https://stackoverflow.com/questions/13128647/matplotlib-finance-volume-overlay/13216161
+    https://zhuanlan.zhihu.com/p/28584048
 '''
 ################################################################################
 
