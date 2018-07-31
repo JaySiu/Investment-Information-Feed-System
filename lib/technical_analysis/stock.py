@@ -17,7 +17,7 @@ def fetch_yahoo_data(ticker):
     end = datetime.datetime.today()
     start = end - datetime.timedelta(weeks=78)
     stock_df = yf.download(ticker, start=start, end=end)    # return a DataFrame
-    time.sleep(SLEEP_TIME)
+    time.sleep(SLEEP_TIME*2)
     if check_stock_data_exist(ticker):
         print("Has old data: %s" % True)
     else:
@@ -49,17 +49,7 @@ def check_stock_data_exist(ticker):
         return False
 
 def stock_preprocess_arr_list(ticker):
-    print("Fetching {}'s data...".format(check_all_ticker(ticker)))
-    end = datetime.datetime.today()
-    start = end - datetime.timedelta(weeks=78)
-    stock_df = yf.download(ticker, start=start, end=end)    # DataFrame
-    if check_stock_data_exist(ticker):
-        print("Has old data: %s" % True)
-    else:
-        print("Has old data: %s" % False)
-    stock_df.to_csv(mp.dir_data + ticker + '.csv', index=False, encoding='utf_8_sig')
-    time.sleep(SLEEP_TIME*3)
-    print("***Stock data saved/updated***")
+    stock_df = fetch_yahoo_data(ticker)
     stock_Open = np.array(stock_df.Open, dtype='f8')
     stock_High = np.array(stock_df.High, dtype='f8')
     stock_Low = np.array(stock_df.Low, dtype='f8')

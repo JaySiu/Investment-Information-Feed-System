@@ -159,7 +159,7 @@ def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal,
             ax_list[row][col].xaxis.set_major_locator(mdates.MonthLocator())
             ax_list[row][col].xaxis.set_major_formatter(mdates.DateFormatter('%y-%b'))
             for major_tick in ax_list[row][col].xaxis.get_ticklabels():
-                major_tick.set_rotation(35)
+                major_tick.set_rotation(40)
 
     #plt.tight_layout()          # prevent overlapping
     fig.subplots_adjust(bottom=0.1)
@@ -239,12 +239,12 @@ def macd():
         macd_HSI()
     elif ope == '2':
         print("Stock ticker(e.g. 0001.HK): ")
-        ticker = input("[Type 'hk' for Hong Kong tickers; 'us' for USA; 'cn' for China]")
-        if ticker.lower() == 'hk':
+        ticker = stock.tick_process(input("[Type 'hk' for Hong Kong tickers; 'us' for USA; 'cn' for China]"))
+        if ticker == 'hk':
             stock.check_ticker_by_country('Hong Kong')
-        elif ticker.lower() == 'us':
+        elif ticker == 'us':
             stock.check_ticker_by_country('USA')
-        elif ticker.lower() == 'cn':
+        elif ticker == 'cn':
             stock.check_ticker_by_country('China')
         else:
             print("\n")
@@ -269,9 +269,4 @@ def macd():
     download.click()
     time.sleep(2)
     driver.quit()
-'''
-
-'''
-if __name__ == '__main__':
-    macd()
 '''
