@@ -17,6 +17,7 @@ def fetch_yahoo_data(ticker):
     end = datetime.datetime.today()
     start = end - datetime.timedelta(weeks=78)
     stock_df = yf.download(ticker, start=start, end=end)    # return a DataFrame
+    time.sleep(SLEEP_TIME)
     if check_stock_data_exist(ticker):
         print("Has old data: %s" % True)
     else:
@@ -76,3 +77,12 @@ def stock_preprocess_candlestick(ticker):
     stock_df['Date'] = stock_df.index.map(mdates.date2num)      # candlestick_ochl needs time in float days format
     stock_df_no_vol = stock_df[['Date', 'Open', 'Close', 'High', 'Low']]
     return [np.array(stock_df_no_vol.values), np.array(stock_df.Open), np.array(stock_df.Close), np.array(stock_df.Volume), stock_Date]
+
+def tick_process(ticker):
+    if ticker.lower() == 'hk' or ticker.lower() == 'us' or ticker.lower() == 'cn':
+        return ticker.lower()
+    else:
+        num, country = ticker.split('.')
+        country = country.upper()
+        num = (4-len(num))*'0' + num
+        return '{}.{}'.format(num, country)

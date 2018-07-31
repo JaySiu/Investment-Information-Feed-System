@@ -2,12 +2,12 @@
 Entry point of the investment information feed system
 
 Dependent-modules/packages:
-    - Anaconda Python
+    - Anaconda Python3.6
     - talib: $conda install -c quantopian ta-lib
     - selenium: $conda install -c anaconda selenium
     - fix_yahoo_finance: $pip install fix_yahoo_finance --upgrade --no-cache-dir
     - chromeDriver:
-        macOS: place it in /usr/local/table_index
+        macOS: place it in /usr/local/bin
         Windows: put it under the ~main.py~'s directory
 
 '''
