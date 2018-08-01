@@ -4,8 +4,10 @@ for the clients
 '''
 
 import time
-from macd import macd
 from bbands import bbands
+from macd import macd
+from rsi import rsi
+
 
 indicators = {'1': 'B-Bands', '2': 'CCI', '3':'KDJ', '4': 'MACD', '5': 'OBV', '6':'RSI'}
 
@@ -35,7 +37,7 @@ def analyze():
             elif indicators[c] == 'OBV':
                 print("On-Balance Volume")
             elif indicators[c] == 'RSI':
-                print("Relative Strength Index")
+                rsi()
 
 
 if __name__ == '__main__':

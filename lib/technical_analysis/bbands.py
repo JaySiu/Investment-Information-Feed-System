@@ -1,24 +1,21 @@
 '''
 Bollinger Bands (B-Bands)
 '''
-import time
+
 import talib
 import stock
-import datetime
-import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.finance import candlestick_ochl, volume_overlay
 
-##### helpers ##################################################################
+##### helper ###################################################################
 
 def cal_plot_bband(ticker):
-    print("Calculating Bollinger Bands...")
+    print("Calculating B-Bands...")
     stock_data = stock.stock_preprocess_candlestick(ticker)
     upper, middle, lower = talib.BBANDS(stock_data[2], matype=talib.MA_Type.SMA)
 
-    ##### ploting
+    ##### plotting
     fig, ax_list = plt.subplots(2, 1, figsize=(15,15))
     plt.suptitle('Bollinger Bands of {}({})'.format(stock.check_all_ticker(ticker), ticker), fontsize = 20, fontweight='bold')
 
@@ -66,7 +63,7 @@ Other ways to plot:
 
 def bbands():
     print("*******************************************************")
-    print("Running BBands...")
+    print("Running Bollinger Bands...")
     print("Get BBands on:")
     print("1) Stocks")
     print("2) User Portfolio")
