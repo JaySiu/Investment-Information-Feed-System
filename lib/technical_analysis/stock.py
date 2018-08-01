@@ -22,7 +22,11 @@ def fetch_yahoo_data(ticker):
         print("Has old data: %s" % True)
     else:
         print("Has old data: %s" % False)
-    stock_df.to_csv(mp.dir_data + ticker + '.csv', index=False, encoding='utf_8_sig')
+    stock_df_cvs = stock_df
+    stock_Date = np.array(stock_df.index)
+    stock_df_cvs['Date'] = np.array([datetime.datetime.strptime(str(t)[:10], '%Y-%m-%d').date() for t in stock_Date])
+    stock_df_cvs = stock_df_cvs[['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']]
+    stock_df_cvs.to_csv(mp.dir_data + ticker + '.csv', index=False, encoding='utf_8_sig')
     time.sleep(SLEEP_TIME*3)
     print("***Stock data saved/updated***")
     return stock_df
@@ -72,7 +76,10 @@ def tick_process(ticker):
     if ticker.lower() == 'hk' or ticker.lower() == 'us' or ticker.lower() == 'cn':
         return ticker.lower()
     else:
-        num, country = ticker.split('.')
-        country = country.upper()
-        num = (4-len(num))*'0' + num
-        return '{}.{}'.format(num, country)
+        try:
+            num, country = ticker.split('.')
+            country = country.upper()
+            num = (4-len(num))*'0' + num
+            return '{}.{}'.format(num, country)
+        except:
+            return ticker.upper()
