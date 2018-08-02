@@ -9,7 +9,7 @@ from macd import macd
 from rsi import rsi
 
 
-indicators = {'1': 'B-Bands', '2': 'CCI', '3':'KDJ', '4': 'MACD', '5': 'OBV', '6':'RSI'}
+indicators = {'1': 'B-Bands', '2': 'CCI', '3': 'Chaikin', '4':'KDJ', '5': 'MACD', '6': 'OBV', '7': 'Parabolic SAR', '8':'RSI'}
 
 def analyze():
     print("*******************************************************")

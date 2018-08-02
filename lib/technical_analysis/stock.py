@@ -13,6 +13,14 @@ from matplotlib.finance import date2num
 SLEEP_TIME = 1
 
 '''
+save the plot to data/plots directory
+
+def save_plot(type, ticker):
+    Print("Saving the plot...")
+    plt.savefig(mp.dir_data + type + ' - ' + check_all_ticker(ticker) + '.jpeg')
+'''
+
+'''
 take a string of ticker
 fetch the ticker's data from yahoo APIs
 save the pandas Dataframe data as .to_csv
@@ -23,7 +31,7 @@ def fetch_yahoo_data(ticker):
     end = datetime.datetime.today()
     start = end - datetime.timedelta(weeks=78)
     stock_df = yf.download(ticker, start=start, end=end)    # return a DataFrame
-    time.sleep(SLEEP_TIME*2)
+    time.sleep(SLEEP_TIME)
     if check_stock_data_exist(ticker):
         print("Has old data: %s" % True)
     else:
@@ -70,6 +78,7 @@ if exists, remove the file
 def check_stock_data_exist(ticker):
     if os.path.exists('data/{}.csv'.format(ticker)):
         os.remove('data/{}.csv'.format(ticker))
+        time.sleep(SLEEP_TIME)
         return True
     else:
         return False

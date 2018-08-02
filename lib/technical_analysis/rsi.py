@@ -4,7 +4,9 @@
 
 import talib
 import stock
+import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 ##### helper ###################################################################
 
@@ -14,9 +16,21 @@ def cal_plot_rsi(ticker):
     rsi = talib.RSI(stock_data[2], timeperiod=14)
 
     ##### plotting
-    fig, ax_list = plt.subplots(1, 1, figsize=(15,15))
+    fig, ax = plt.subplots(1, 1, figsize=(15,15))
     plt.suptitle('Relative Strength Index of {}({})'.format(stock.check_all_ticker(ticker), ticker), fontsize = 20, fontweight='bold')
+    ax.plot(stock_data[0], rsi, label='RSI', color='#A139B3')
+    ax.fill_between(stock_data[0], 70, 30, color='#DED3E5')
 
+    ax.legend()
+    ax.grid(True)
+    ax.minorticks_on()
+    ax.tick_params(axis='x',which='minor',bottom='off')
+    ax.xaxis.set_major_locator(mdates.MonthLocator())
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%y-%b'))
+
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.95)
+    plt.show()
 
 ################################################################################
 

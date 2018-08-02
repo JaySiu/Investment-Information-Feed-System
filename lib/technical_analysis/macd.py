@@ -19,8 +19,6 @@ import matplotlib.dates as mdates
 from selenium import webdriver
 from bs4 import BeautifulSoup
 
-
-
 #import quandl
 #pd.core.common.is_list_like = pd.api.types.is_list_like
 
@@ -38,14 +36,11 @@ def check_HSI_data_exist():
     else:
         return False
 
-
 def remove_comma(str):
     return str.replace(',', '')
 
-
 #def remove_nan(arr):
 #    return arr[~np.isnan(arr)]
-
 
 def parse_HSI_data(text):
     print("Parsing HSI data...")
@@ -61,7 +56,6 @@ def parse_HSI_data(text):
 
     print("{} data entries parsed".format(len(df)))
     return df.Close.apply(remove_comma)
-
 
 def update_HSI_data():
     print("Getting HSI data...")
@@ -99,30 +93,24 @@ def update_HSI_data():
     arr_date = retrieve_HSI_Date()      # in desc order
     return [arr_date, close_prices]
 
-
 def retrieve_HSI_Date():
     date = np.array(pd.read_csv(mp.dir_data + '^HSI.csv').Date)
     return np.array([datetime.datetime.strptime(t, '%b %d, %Y').date() for t in date])
 
-
 def retrieve_HSI_Close():
     return np.array(pd.read_csv(mp.dir_data + '^HSI.csv').Close.apply(remove_comma), dtype='f8')
-
 
 def calculate_macd(arr_date, close_prices, ticker, fast=12, slow=26, signal=9):
     print("Calculating MACD...")
     print("Fast: {}-days; Slow: {}-days; Signal: {}-days".format(fast, slow, signal))
     print("Select your Moving Average type:")
     type = input("(SMA,EMA,WMA,DEMA,TEMA,TRIMA,KAMA,MAMA,T3)").upper()
-    #print(close_prices)        # in desc order
+
     avg_fast = talib.MA(close_prices, timeperiod=fast, matype=ma_type[type])    # in desc order
-    #print(avg_fast)
     avg_slow = talib.MA(close_prices, timeperiod=slow, matype=ma_type[type])    # in desc order
-    #print(avg_slow)
     macd, macd_signal, histogram = talib.MACD(close_prices, fastperiod=fast, slowperiod=slow, signalperiod=signal)
 
     plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal, histogram, ticker, fast, slow, signal, type)
-
 
 def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal, histogram, ticker, fast=12, slow=26, signal=9, type='EMA'):
     fig, ax_list = plt.subplots(2, 2, figsize=(15,10))
@@ -161,10 +149,9 @@ def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal,
             for major_tick in ax_list[row][col].xaxis.get_ticklabels():
                 major_tick.set_rotation(40)
 
-    #plt.tight_layout()          # prevent overlapping
-    fig.subplots_adjust(bottom=0.1)
+    plt.tight_layout()          # prevent overlapping
+    fig.subplots_adjust(top=0.9)
     plt.show()
-
 
 ################################################################################
 

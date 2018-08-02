@@ -38,8 +38,9 @@ def cal_plot_bband(ticker):
         ax_list[i].tick_params(axis='x',which='minor',bottom='off')
 
     ax_list[0].legend()
-    plt.setp(plt.gca().get_xticklabels(), rotation=40)
-    fig.subplots_adjust(hspace=0)
+    plt.setp(plt.gca().get_xticklabels())
+    fig.tight_layout()
+    fig.subplots_adjust(hspace=0, top=0.95)
     plt.show()
 
 

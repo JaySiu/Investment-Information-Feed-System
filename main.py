@@ -34,7 +34,7 @@ if __name__ == '__main__':
             print("1) Assets Management")
             print("2) Technical Analysis")
             print("3) Market News")
-            ope = input()
+            ope = input().lower()
             if ope == '1':
                 print('1')
             elif ope == '2':
