@@ -6,7 +6,6 @@ import talib
 import stock
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 
 ##### helper ###################################################################
 
@@ -23,7 +22,7 @@ def cal_plot_cci(ticker, period):
     ax_list[0].plot(stock_data[0], stock_data[2], label='Price - '+name, color='black')
     ax_list[0].get_xaxis().set_visible(False)
 
-    ax_list[1].plot(stock_data[0], cci, label='CCI', color='#BB9F6D')
+    ax_list[1].plot(stock_data[0], cci, label='CCI - '+period+'-day period', color='#BB9F6D')
     ax_list[1].axhline(y=100, color='red')
     ax_list[1].axhline(y=-100, color='red')
 

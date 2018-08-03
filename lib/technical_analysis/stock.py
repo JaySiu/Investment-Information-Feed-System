@@ -87,7 +87,7 @@ def check_stock_data_exist(ticker):
 '''
 take a string of ticker
 return a list of the ticker's data coulmns as numpy arrays
-[stock_Date, stock_Open, stock_Close, stock_High, stock_Low, stock_Volume]
+[0stock_Date, 1stock_Open, 2stock_Close, 3stock_High, 4stock_Low, 5stock_Volume]
 -> for plotting normal curve
 '''
 def stock_preprocess_arr_list(ticker):

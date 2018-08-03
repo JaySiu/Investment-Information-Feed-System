@@ -8,6 +8,7 @@ from bbands import bbands
 from cci import cci
 from kdj import kdj
 from macd import macd
+from obv import obv
 from rsi import rsi
 
 
@@ -37,7 +38,7 @@ def analyze():
             elif indicators[c] == 'MACD':
                 macd()
             elif indicators[c] == 'OBV':
-                print("On-Balance Volume")
+                obv()
             elif indicators[c] == 'Parabolic SAR':
                 print("PSAR")
             elif indicators[c] == 'RSI':

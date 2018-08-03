@@ -6,7 +6,6 @@ import talib
 import stock
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 
 ##### helper ###################################################################
 
