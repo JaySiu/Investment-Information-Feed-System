@@ -5,18 +5,20 @@ for the clients
 
 import time
 from bbands import bbands
+from cci import cci
+from kdj import kdj
 from macd import macd
 from rsi import rsi
 
 
-indicators = {'1': 'B-Bands', '2': 'CCI', '3': 'Chaikin', '4':'KDJ', '5': 'MACD', '6': 'OBV', '7': 'Parabolic SAR', '8':'RSI'}
+indicators = {'1': 'B-Bands', '2': 'CCI', '3':'KDJ', '4': 'MACD', '5': 'OBV', '6': 'Parabolic SAR', '7':'RSI'}
 
 def analyze():
     print("*******************************************************")
     print("Enter your client\'s id:")
     id = input()
     print("*******************************************************")
-    print("Select indicators:(choices separated by \',\')")
+    print("Select indicators:(choices separated by ',' e.g. 1,2,3)")
     keys = list(indicators.keys())
     keys.sort()
     for k in keys:
@@ -29,13 +31,15 @@ def analyze():
             if indicators[c] == 'B-Bands':
                 bbands()
             elif indicators[c] == 'CCI':
-                print("Commodity Channel Index")
+                cci()
             elif indicators[c] == 'KDJ':
-                print("KDJ")
+                kdj()
             elif indicators[c] == 'MACD':
                 macd()
             elif indicators[c] == 'OBV':
                 print("On-Balance Volume")
+            elif indicators[c] == 'Parabolic SAR':
+                print("PSAR")
             elif indicators[c] == 'RSI':
                 rsi()
 
