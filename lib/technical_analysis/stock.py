@@ -28,6 +28,7 @@ return a copy of the DataFrame with added 'Date' column
 '''
 def fetch_yahoo_data(ticker):
     print("Fetching {}'s data...".format(check_all_ticker(ticker)))
+    print("API may return 'zero-array' error, just re-run the program")
     end = datetime.datetime.today()
     start = end - datetime.timedelta(weeks=78)
     stock_df = yf.download(ticker, start=start, end=end)    # return a DataFrame
@@ -87,6 +88,7 @@ def check_stock_data_exist(ticker):
 '''
 take a string of ticker
 return a list of the ticker's data coulmns as numpy arrays
+[stock_Date, stock_Open, stock_Close, stock_High, stock_Low, stock_Volume]
 -> for plotting normal curve
 '''
 def stock_preprocess_arr_list(ticker):
@@ -104,6 +106,7 @@ def stock_preprocess_arr_list(ticker):
 
 '''
 same as stock_preprocess_arr_list(ticker)
+[np.array(stock_df_no_vol.values), stock_Open, stock_Close, stock_Volume, stock_Date]
 -> but for plotting candlesticks
 '''
 def stock_preprocess_candlestick(ticker):

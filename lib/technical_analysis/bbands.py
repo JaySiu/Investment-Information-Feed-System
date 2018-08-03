@@ -22,6 +22,7 @@ def cal_plot_bband(ticker):
     candlestick_ochl(ax_list[0], stock_data[0], width=0.8, colorup='#53B987', colordown='#EB4D5C')
     ax_list[0].xaxis.set_major_locator(mdates.MonthLocator())
     ax_list[0].xaxis.set_major_formatter(mdates.DateFormatter('%Y-%b-%d'))
+    ax_list[0].get_xaxis().set_visible(False)
     volume_overlay(ax_list[1], *stock_data[1:4], width=0.8, colorup='#53B987', colordown='#EB4D5C')
     #ax_list[1].xaxis.set_major_locator(mdates.MonthLocator())
     #ax_list[1].xaxis.set_major_formatter(mdates.DateFormatter('%Y-%b-%d'))

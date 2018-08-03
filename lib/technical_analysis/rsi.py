@@ -1,5 +1,5 @@
 '''
-
+Relative Strength Index
 '''
 
 import talib
