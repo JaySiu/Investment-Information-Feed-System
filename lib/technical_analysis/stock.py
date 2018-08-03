@@ -8,7 +8,6 @@ import module_path as mp
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import fix_yahoo_finance as yf
-from matplotlib.finance import date2num
 
 SLEEP_TIME = 1
 

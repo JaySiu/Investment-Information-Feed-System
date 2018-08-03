@@ -6,7 +6,7 @@ import talib
 import stock
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from matplotlib.finance import candlestick_ochl, volume_overlay
+from mpl_finance import candlestick_ochl, volume_overlay
 
 ##### helper ###################################################################
 
