@@ -6,7 +6,7 @@ Dependent-modules/packages:
     - talib: $conda install -c quantopian ta-lib
     - selenium: $conda install -c anaconda selenium
     - fix_yahoo_finance: $pip install fix_yahoo_finance --upgrade --no-cache-dir
-    - msgpack: $conda install -c anaconda msgpack-python/$pip install msgpack
+    - msgpack: $pip install msgpack
     - mlp_finance: $pip install mpl_finance
     - chromeDriver:
         macOS: place it in /usr/local/bin
