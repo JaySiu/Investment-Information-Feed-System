@@ -59,6 +59,7 @@ def yahoo_api(ticker):
 take a string of ticker
 call yahoo_api() function
 return a copy of the DataFrame with added 'Date' column (from the index)
+improve performance by checking if some data exists
 '''
 def fetch_yahoo_data(ticker):
     name = check_all_ticker(ticker)[0]
