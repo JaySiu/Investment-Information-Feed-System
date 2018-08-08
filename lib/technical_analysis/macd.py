@@ -31,7 +31,7 @@ ma_type = {'SMA': 0 , 'EMA': 1, 'WMA': 2, 'DEMA': 3, 'TEMA': 4, 'TRIMA': 5, 'KAM
 ##### helpers ##################################################################
 
 def check_HSI_data_exist():
-    if os.path.exists('data/^HSI.csv'):
+    if os.path.exists(mp.dir_data_stocks + '^HSI.csv'):
         return True
     else:
         return False

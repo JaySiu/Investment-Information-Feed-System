@@ -1,6 +1,8 @@
 '''
 RMs can select different indicators for doing the technical analysis
 for the clients
+
+Plotting the graphs requires the data to be passed in asc order
 '''
 
 import time
