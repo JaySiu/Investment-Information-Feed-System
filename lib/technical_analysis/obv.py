@@ -16,7 +16,7 @@ def cal_plot_obv(ticker):
 
     ##### plotting
     fig, ax_list = plt.subplots(2, 1, figsize=(15,15))
-    name = stock.check_all_ticker(ticker)
+    name = stock.check_all_ticker(ticker)[0]
     plt.suptitle('On-Balance Volume {}({})'.format(name, ticker), fontsize = 20, fontweight='bold')
 
     ax_list[0].plot(stock_data[0], stock_data[2], label='Price - '+name, color='black')
@@ -35,10 +35,10 @@ def cal_plot_obv(ticker):
     plt.show()
 ################################################################################
 
-def obv():
+def obv(cus_ticker_list):
     print("*******************************************************")
-    print("Running Commodity Channel Index...")
-    print("Get CCI on:")
+    print("Running On-Balance Value...")
+    print("Get OBV on:")
     print("1) Stocks")
     print("2) User Portfolio")
     ope = input()
@@ -51,9 +51,17 @@ def obv():
             stock.check_ticker_by_country('USA')
         elif ticker == 'cn':
             stock.check_ticker_by_country('China')
+        elif ticker == '':
+            print("Invalid ticker!")    
         else:
             print("\n")
             cal_plot_obv(ticker)
+    elif ope == '2':
+        if len(cus_ticker_list) > 0:
+            for tk in cus_ticker_list:
+                cal_plot_obv(tk)
+        else:
+            print("No stock data!")
 
     print("Finish")
     print("\n")

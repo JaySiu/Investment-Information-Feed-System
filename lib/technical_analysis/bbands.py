@@ -6,6 +6,7 @@ import talib
 import stock
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from ta_user_portfolio import get_client_tickers
 from mpl_finance import candlestick_ochl, volume_overlay
 
 ##### helper ###################################################################
@@ -17,7 +18,7 @@ def cal_plot_bband(ticker):
 
     ##### plotting
     fig, ax_list = plt.subplots(2, 1, figsize=(15,15))
-    plt.suptitle('Bollinger Bands of {}({})'.format(stock.check_all_ticker(ticker), ticker), fontsize = 20, fontweight='bold')
+    plt.suptitle('Bollinger Bands of {}({})'.format(stock.check_all_ticker(ticker)[0], ticker), fontsize = 20, fontweight='bold')
 
     candlestick_ochl(ax_list[0], stock_data[0], width=0.8, colorup='#53B987', colordown='#EB4D5C')
     ax_list[0].xaxis.set_major_locator(mdates.MonthLocator())
@@ -63,7 +64,7 @@ Other ways to plot:
 ################################################################################
 
 
-def bbands():
+def bbands(cus_ticker_list):
     print("*******************************************************")
     print("Running Bollinger Bands...")
     print("Get BBands on:")
@@ -79,9 +80,17 @@ def bbands():
             stock.check_ticker_by_country('USA')
         elif ticker == 'cn':
             stock.check_ticker_by_country('China')
+        elif ticker == '':
+            print("Invalid ticker!")
         else:
             print("\n")
             cal_plot_bband(ticker)
+    elif ope == '2':
+        if len(cus_ticker_list) > 0:
+            for tk in cus_ticker_list:
+                cal_plot_bband(tk)
+        else:
+            print("No stock data!")
 
     print("Finish")
     print("\n")

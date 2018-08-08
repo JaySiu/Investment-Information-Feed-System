@@ -1,4 +1,5 @@
 import os
+import re
 import time
 import talib
 import datetime
@@ -16,32 +17,70 @@ save the plot to data/plots directory
 
 def save_plot(type, ticker):
     Print("Saving the plot...")
-    plt.savefig(mp.dir_data + type + ' - ' + check_all_ticker(ticker) + '.jpeg')
+    plt.savefig(mp.dir_data_plots + type + ' - ' + check_all_ticker(ticker)[0] + '.jpeg')
 '''
+
+
+'''
+check the last modification date if the stock data exists
+'''
+def check_modi_date(ticker):
+    mtime = os.path.getmtime(mp.dir_data_stocks + '{}.csv'.format(ticker))
+    mtime = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+    mtime = datetime.datetime.strptime(mtime, '%Y-%m-%d')
+    now = datetime.datetime.today()
+    if mtime.date() < now.date():
+        return [True, mtime]
+    else:
+        return [False, mtime]
+
+'''
+call the yahoo finance API to download data
+save the data to .csv file
+'''
+def yahoo_api(ticker):
+    print("!-- API may return an error, just re-run the program --!")
+    end = datetime.datetime.today()
+    start = end - datetime.timedelta(weeks=52)
+    stock_df = yf.download(ticker, start=start, end=end)    # return a DataFrame
+    time.sleep(SLEEP_TIME)
+    #stock_df_cvs = stock_df
+    #stock_Date = np.array(stock_df.index)
+    #stock_df_cvs['Index'] = stock_Date
+    #stock_df['Date'] = np.array([datetime.datetime.strptime(str(t)[:10], '%Y-%m-%d').date() for t in stock_Date])
+    #stock_df = stock_df[['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']]
+    stock_df_save = stock_df.sort_values(by='Date', ascending=False)
+    stock_df_save.to_csv(mp.dir_data_stocks + '{}.csv'.format(ticker), index=True, encoding='utf_8_sig')
+    time.sleep(SLEEP_TIME*3)
+    return stock_df
+
 
 '''
 take a string of ticker
-fetch the ticker's data from yahoo APIs
-save the pandas Dataframe data as .to_csv
-return a copy of the DataFrame with added 'Date' column
+call yahoo_api() function
+return a copy of the DataFrame with added 'Date' column (from the index)
 '''
 def fetch_yahoo_data(ticker):
-    print("Fetching {}'s data...".format(check_all_ticker(ticker)))
-    print("API may return 'zero-array' error, just re-run the program")
-    end = datetime.datetime.today()
-    start = end - datetime.timedelta(weeks=78)
-    stock_df = yf.download(ticker, start=start, end=end)    # return a DataFrame
-    time.sleep(SLEEP_TIME)
+    name = check_all_ticker(ticker)[0]
+    print("Checking {}'s data...".format(name))
     if check_stock_data_exist(ticker):
         print("Has old data: %s" % True)
+        modi = check_modi_date(ticker)
+        if modi[0] == True:
+            print("Last updated time for {}: {}".format(name, modi[1]))
+            os.remove(mp.dir_data_stocks + '{}.csv'.format(ticker))
+            time.sleep(SLEEP_TIME)
+            print("Fetching {}'s data...".format(name))
+            stock_df = yahoo_api(ticker)
+        else:
+            print("Data is up-to-date")
+            stock_df = pd.read_csv(mp.dir_data_stocks + '{}.csv'.format(ticker), index_col='Date')
+            stock_df = stock_df.sort_values(by='Date', ascending=True)
     else:
         print("Has old data: %s" % False)
-    stock_df_cvs = stock_df
-    stock_Date = np.array(stock_df.index)
-    stock_df_cvs['Date'] = np.array([datetime.datetime.strptime(str(t)[:10], '%Y-%m-%d').date() for t in stock_Date])
-    stock_df_cvs = stock_df_cvs[['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']]
-    stock_df_cvs.to_csv(mp.dir_data + ticker + '.csv', index=False, encoding='utf_8_sig')
-    time.sleep(SLEEP_TIME*3)
+        print("Fetching {}'s data...".format(name))
+        stock_df = yahoo_api(ticker)
+
     print("***Stock data saved/updated***")
     return stock_df
 
@@ -67,7 +106,10 @@ return the name of the ticker
 def check_all_ticker(ticker):
     ticker_df = pd.read_csv(mp.dir_ta + 'Yahoo_Ticker_Symbols_Sep2017.csv')
     ticker_dict = dict(zip(ticker_df.Ticker, ticker_df.Name))
-    return ticker_dict[ticker]
+    try:
+        return [ticker_dict[ticker], True]
+    except:
+        return ["{}'s data not found!".format(ticker), False]
 
 
 '''
@@ -76,9 +118,7 @@ check if the ticker's .csv file already exists
 if exists, remove the file
 '''
 def check_stock_data_exist(ticker):
-    if os.path.exists('data/{}.csv'.format(ticker)):
-        os.remove('data/{}.csv'.format(ticker))
-        time.sleep(SLEEP_TIME)
+    if os.path.exists(mp.dir_data_stocks + '{}.csv'.format(ticker)):
         return True
     else:
         return False
@@ -112,7 +152,7 @@ def stock_preprocess_candlestick(ticker):
     stock_df = fetch_yahoo_data(ticker)
     stock_Date = np.array(stock_df.index)
     stock_Date = np.array([datetime.datetime.strptime(str(t)[:10], '%Y-%m-%d').date() for t in stock_Date])
-    stock_df['Date'] = stock_df.index.map(mdates.date2num)      # candlestick_ochl needs time in float days format
+    stock_df['Date'] = np.array(pd.Series(stock_Date).map(mdates.date2num))      # candlestick_ochl needs time in float days format
     stock_df_no_vol = stock_df[['Date', 'Open', 'Close', 'High', 'Low']]
     return [np.array(stock_df_no_vol.values), np.array(stock_df.Open), np.array(stock_df.Close), np.array(stock_df.Volume), stock_Date]
 
@@ -121,15 +161,29 @@ def stock_preprocess_candlestick(ticker):
 take a string of ticker
 check if it is ticker-name lookup or stock data lookup
 return the processed string for calling yahoo APIs
+(only support HK, CN and US)
 '''
 def tick_process(ticker):
+    dot_patt = re.compile('^[0-9]+\.[a-zA-Z]+$')
+    plain_patt = re.compile('^[a-zA-Z]+$')
+    is_dot = dot_patt.match(ticker)
+    is_plain = plain_patt.match(ticker)
+
     if ticker.lower() == 'hk' or ticker.lower() == 'us' or ticker.lower() == 'cn':
         return ticker.lower()
-    else:
-        try:
-            num, country = ticker.split('.')
-            country = country.upper()
-            num = (4-len(num))*'0' + num
-            return '{}.{}'.format(num, country)
-        except:
+    elif is_dot != None:
+        num, country = ticker.split('.')
+        country = country.upper()
+        num = (4-len(num))*'0' + num
+        new_tk = '{}.{}'.format(num, country)
+        if check_all_ticker(new_tk)[1] == True:
+            return new_tk
+        else:
+            return ''
+    elif is_plain != None:
+        if check_all_ticker(ticker.upper())[1] == True:
             return ticker.upper()
+        else:
+            return ''
+    else:
+        return ''

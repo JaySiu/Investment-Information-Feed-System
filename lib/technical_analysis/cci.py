@@ -16,7 +16,7 @@ def cal_plot_cci(ticker, period):
 
     ##### plotting
     fig, ax_list = plt.subplots(2, 1, figsize=(15,15))
-    name = stock.check_all_ticker(ticker)
+    name = stock.check_all_ticker(ticker)[0]
     plt.suptitle('Commodity Channel Index {}({})'.format(name, ticker), fontsize = 20, fontweight='bold')
 
     ax_list[0].plot(stock_data[0], stock_data[2], label='Price - '+name, color='black')
@@ -37,7 +37,7 @@ def cal_plot_cci(ticker, period):
     plt.show()
 ################################################################################
 
-def cci():
+def cci(cus_ticker_list):
     print("*******************************************************")
     print("Running Commodity Channel Index...")
     print("Get CCI on:")
@@ -55,9 +55,21 @@ def cci():
                 stock.check_ticker_by_country('USA')
             elif ticker == 'cn':
                 stock.check_ticker_by_country('China')
+            elif ticker == '':
+                print("Invalid ticker!")
             else:
                 print("\n")
-                cal_plot_cci(ticker, period)
+                cal_plot_cci(ticker, str(period))
+        else:
+            print("Invalid period!")
+    elif ope == '2':
+        period = input("Enter the number of days for CCI period: ")
+        if period.isdigit():
+            if len(cus_ticker_list) > 0:
+                for tk in cus_ticker_list:
+                    cal_plot_cci(tk, str(20))
+            else:
+                    print("No stock data!")
         else:
             print("Invalid period!")
 

@@ -17,7 +17,7 @@ def cal_plot_rsi(ticker):
 
     ##### plotting
     fig, ax = plt.subplots(1, 1, figsize=(15,15))
-    plt.suptitle('Relative Strength Index of {}({})'.format(stock.check_all_ticker(ticker), ticker), fontsize = 20, fontweight='bold')
+    plt.suptitle('Relative Strength Index of {}({})'.format(stock.check_all_ticker(ticker)[0], ticker), fontsize = 20, fontweight='bold')
     ax.plot(stock_data[0], rsi, label='RSI', color='#A139B3')
     ax.fill_between(stock_data[0], 70, 30, color='#DED3E5')
 
@@ -34,7 +34,7 @@ def cal_plot_rsi(ticker):
 
 ################################################################################
 
-def rsi():
+def rsi(cus_ticker_list):
     print("*******************************************************")
     print("Running Relative Strength Index...")
     print("Get RSI on:")
@@ -50,9 +50,17 @@ def rsi():
             stock.check_ticker_by_country('USA')
         elif ticker == 'cn':
             stock.check_ticker_by_country('China')
+        elif ticker == '':
+            print("Invalid ticker!")
         else:
             print("\n")
             cal_plot_rsi(ticker)
+    elif ope == '2':
+        if len(cus_ticker_list) > 0:
+            for tk in cus_ticker_list:
+                cal_plot_rsi(tk)
+        else:
+            print("No stock data!")
 
     print("Finish")
     print("\n")

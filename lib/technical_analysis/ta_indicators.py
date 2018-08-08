@@ -4,20 +4,25 @@ for the clients
 '''
 
 import time
+import ta_user_portfolio as taup
 from bbands import bbands
 from cci import cci
 from kdj import kdj
 from macd import macd
 from obv import obv
+from psar import psar
 from rsi import rsi
-
 
 indicators = {'1': 'B-Bands', '2': 'CCI', '3':'KDJ', '4': 'MACD', '5': 'OBV', '6': 'Parabolic SAR', '7':'RSI'}
 
 def analyze():
     print("*******************************************************")
-    print("Enter your client\'s id:")
-    id = input()
+    print("Enter your client\'s id (number only):")
+    cus_id = input()
+    cus_ticker_list = taup.get_client_tickers(cus_id)
+    if cus_ticker_list == None or cus_ticker_list == []:
+        print("Customer data not found!")
+        cus_ticker_list = []
     print("*******************************************************")
     print("Select indicators:(choices separated by ',' e.g. 1,2,3)")
     keys = list(indicators.keys())
@@ -30,19 +35,19 @@ def analyze():
     else:
         for c in choices:
             if indicators[c] == 'B-Bands':
-                bbands()
+                bbands(cus_ticker_list)
             elif indicators[c] == 'CCI':
-                cci()
+                cci(cus_ticker_list)
             elif indicators[c] == 'KDJ':
-                kdj()
+                kdj(cus_ticker_list)
             elif indicators[c] == 'MACD':
-                macd()
+                macd(cus_ticker_list)
             elif indicators[c] == 'OBV':
-                obv()
+                obv(cus_ticker_list)
             elif indicators[c] == 'Parabolic SAR':
-                print("PSAR")
+                psar(cus_ticker_list)
             elif indicators[c] == 'RSI':
-                rsi()
+                rsi(cus_ticker_list)
 
 
 if __name__ == '__main__':

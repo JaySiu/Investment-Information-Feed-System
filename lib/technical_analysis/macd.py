@@ -88,17 +88,17 @@ def update_HSI_data():
     print("Saving...")
     print("\n")
     global df
-    df.to_csv(mp.dir_data + '^HSI.csv', index=False, encoding='utf_8_sig')
+    df.to_csv(mp.dir_data_stocks + '^HSI.csv', index=False, encoding='utf_8_sig')
     time.sleep(SLEEP_TIME*3)
     arr_date = retrieve_HSI_Date()      # in desc order
     return [arr_date, close_prices]
 
 def retrieve_HSI_Date():
-    date = np.array(pd.read_csv(mp.dir_data + '^HSI.csv').Date)
+    date = np.array(pd.read_csv(mp.dir_data_stocks + '^HSI.csv').Date)
     return np.array([datetime.datetime.strptime(t, '%b %d, %Y').date() for t in date])
 
 def retrieve_HSI_Close():
-    return np.array(pd.read_csv(mp.dir_data + '^HSI.csv').Close.apply(remove_comma), dtype='f8')
+    return np.array(pd.read_csv(mp.dir_data_stocks + '^HSI.csv').Close.apply(remove_comma), dtype='f8')
 
 def calculate_macd(arr_date, close_prices, ticker, fast=12, slow=26, signal=9):
     print("Calculating MACD...")
@@ -117,7 +117,7 @@ def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal,
     if ticker == 'HSI':
         plt.suptitle('MACD-related plots of {}'.format(ticker), fontsize = 20, fontweight='bold')
     else:
-        plt.suptitle('MACD-related plots of {}({})'.format(stock.check_all_ticker(ticker), ticker), fontsize = 20, fontweight='bold')
+        plt.suptitle('MACD-related plots of {}({})'.format(stock.check_all_ticker(ticker)[0], ticker), fontsize = 20, fontweight='bold')
 
     ax_list[0][0].set_title('{}-days and {}-days {}'.format(fast, slow, type), fontstyle='italic')
     ax_list[0][0].plot(arr_date, close_prices, label='^HSI', color='black')
@@ -214,7 +214,7 @@ def macd_HSI():
 ################################################################################
 
 
-def macd():
+def macd(cus_ticker_list):
     print("*******************************************************")
     print("Running MACD...")
     print("Get MACD on:")
@@ -233,9 +233,17 @@ def macd():
             stock.check_ticker_by_country('USA')
         elif ticker == 'cn':
             stock.check_ticker_by_country('China')
+        elif ticker == '':
+            print("Invalid ticker!")
         else:
             print("\n")
             macd_stocks(ticker)
+    elif ope == '3':
+        if len(cus_ticker_list) > 0:
+            for tk in cus_ticker_list:
+                macd_stocks(tk)
+        else:
+            print("No stock data!")
 
     print("Finish")
     print("\n")

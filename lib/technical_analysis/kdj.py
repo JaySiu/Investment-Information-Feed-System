@@ -17,7 +17,7 @@ def cal_plot_kdj(ticker):
 
     ##### plotting
     fig, ax_list = plt.subplots(2, 1, figsize=(15,15))
-    name = stock.check_all_ticker(ticker)
+    name = stock.check_all_ticker(ticker)[0]
     plt.suptitle('Stochastic with J Line of {}({})'.format(name, ticker), fontsize = 20, fontweight='bold')
 
     ax_list[0].plot(stock_data[0], stock_data[2], label='Price - '+name, color='black')
@@ -38,7 +38,7 @@ def cal_plot_kdj(ticker):
     plt.show()
 ################################################################################
 
-def kdj():
+def kdj(cus_ticker_list):
     print("*******************************************************")
     print("Running Stochastic with %J...")
     print("Get KDJ on:")
@@ -54,9 +54,17 @@ def kdj():
             stock.check_ticker_by_country('USA')
         elif ticker == 'cn':
             stock.check_ticker_by_country('China')
+        elif ticker == '':
+            print("Invalid ticker!")
         else:
             print("\n")
             cal_plot_kdj(ticker)
+    elif ope == '2':
+        if len(cus_ticker_list) > 0:
+            for tk in cus_ticker_list:
+                cal_plot_kdj(tk)
+        else:
+            print("No stock data!")
 
     print("Finish")
     print("\n")
