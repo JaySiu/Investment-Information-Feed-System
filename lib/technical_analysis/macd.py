@@ -31,7 +31,7 @@ ma_type = {'SMA': 0 , 'EMA': 1, 'WMA': 2, 'DEMA': 3, 'TEMA': 4, 'TRIMA': 5, 'KAM
 ##### helpers ##################################################################
 
 def check_HSI_data_exist():
-    if os.path.exists(mp.dir_data_stocks + '^HSI.csv'):
+    if os.path.exists(mp.DIR_DATA_STOCKS + '^HSI.csv'):
         return True
     else:
         return False
@@ -88,17 +88,17 @@ def update_HSI_data():
     print("Saving...")
     print("\n")
     global df
-    df.to_csv(mp.dir_data_stocks + '^HSI.csv', index=False, encoding='utf_8_sig')
+    df.to_csv(mp.DIR_DATA_STOCKS + '^HSI.csv', index=False, encoding='utf_8_sig')
     time.sleep(SLEEP_TIME*3)
     arr_date = retrieve_HSI_Date()      # in desc order
     return [arr_date, close_prices]
 
 def retrieve_HSI_Date():
-    date = np.array(pd.read_csv(mp.dir_data_stocks + '^HSI.csv').Date)
+    date = np.array(pd.read_csv(mp.DIR_DATA_STOCKS + '^HSI.csv').Date)
     return np.array([datetime.datetime.strptime(t, '%b %d, %Y').date() for t in date])
 
 def retrieve_HSI_Close():
-    return np.array(pd.read_csv(mp.dir_data_stocks + '^HSI.csv').Close.apply(remove_comma), dtype='f8')
+    return np.array(pd.read_csv(mp.DIR_DATA_STOCKS + '^HSI.csv').Close.apply(remove_comma), dtype='f8')
 
 def calculate_macd(arr_date, close_prices, ticker, fast=12, slow=26, signal=9):
     print("Calculating MACD...")

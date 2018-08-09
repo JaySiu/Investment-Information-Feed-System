@@ -15,7 +15,7 @@ from obv import obv
 from psar import psar
 from rsi import rsi
 
-indicators = {'1': 'B-Bands', '2': 'CCI', '3':'KDJ', '4': 'MACD', '5': 'OBV', '6': 'Parabolic SAR', '7':'RSI'}
+INDICATORS = {'1': 'B-Bands', '2': 'CCI', '3':'KDJ', '4': 'MACD', '5': 'OBV', '6': 'Parabolic SAR', '7':'RSI'}
 
 def analyze():
     print("*******************************************************")
@@ -27,28 +27,28 @@ def analyze():
         cus_ticker_list = []
     print("*******************************************************")
     print("Select indicators:(choices separated by ',' e.g. 1,2,3)")
-    keys = list(indicators.keys())
+    keys = list(INDICATORS.keys())
     keys.sort()
     for k in keys:
-        print("{}) {}".format(k, indicators.get(k)))
+        print("{}) {}".format(k, INDICATORS.get(k)))
     choices = [c.strip() for c in input().split(',')]
-    if len(choices) > len(indicators) or len(list(set(choices)-set(indicators.keys()))) > 0:
+    if len(choices) > len(INDICATORS) or len(list(set(choices)-set(INDICATORS.keys()))) > 0:
         print("Invalid input!")
     else:
         for c in choices:
-            if indicators[c] == 'B-Bands':
+            if INDICATORS[c] == 'B-Bands':
                 bbands(cus_ticker_list)
-            elif indicators[c] == 'CCI':
+            elif INDICATORS[c] == 'CCI':
                 cci(cus_ticker_list)
-            elif indicators[c] == 'KDJ':
+            elif INDICATORS[c] == 'KDJ':
                 kdj(cus_ticker_list)
-            elif indicators[c] == 'MACD':
+            elif INDICATORS[c] == 'MACD':
                 macd(cus_ticker_list)
-            elif indicators[c] == 'OBV':
+            elif INDICATORS[c] == 'OBV':
                 obv(cus_ticker_list)
-            elif indicators[c] == 'Parabolic SAR':
+            elif INDICATORS[c] == 'Parabolic SAR':
                 psar(cus_ticker_list)
-            elif indicators[c] == 'RSI':
+            elif INDICATORS[c] == 'RSI':
                 rsi(cus_ticker_list)
 
 

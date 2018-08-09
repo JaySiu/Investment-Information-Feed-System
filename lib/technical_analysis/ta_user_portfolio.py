@@ -7,7 +7,7 @@ return a list of a client's stocks
 '''
 def get_client_tickers(cus_id):
     id = 'scb_' + cus_id
-    customers_df = pd.read_csv(mp.dir_data_customers + 'customer_trade_book.csv')
+    customers_df = pd.read_csv(mp.DIR_DATA_CUSTOMERS + 'customer_trade_book.csv')
     customers_df = customers_df[['ID', 'Symbol', 'Portfolio_Value']]
     customers_df = customers_df[customers_df.ID == id]
     customers_df = customers_df[customers_df.Portfolio_Value > 0]

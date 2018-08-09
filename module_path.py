@@ -1,8 +1,12 @@
 # directory paths for the modules/packages
-dir_ta = 'lib/technical_analysis/'
+DIR_TA = 'lib/technical_analysis/'
 
-dir_data_customers = 'data/customers/'
+DIR_MARKET = 'lib/market_news/'
 
-dir_data_plots = 'data/plots/'
+DIR_DATA_CUSTOMERS = 'data/customers/'
 
-dir_data_stocks = 'data/stocks/'
+DIR_DATA_NEWS = 'data/news/'
+
+DIR_DATA_PLOTS = 'data/plots/'
+
+DIR_DATA_STOCKS = 'data/stocks/'

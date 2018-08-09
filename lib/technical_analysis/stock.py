@@ -17,7 +17,7 @@ save the plot to data/plots directory
 
 def save_plot(type, ticker):
     Print("Saving the plot...")
-    plt.savefig(mp.dir_data_plots + type + ' - ' + check_all_ticker(ticker)[0] + '.jpeg')
+    plt.savefig(mp.DIR_DATA_PLOTS + type + ' - ' + check_all_ticker(ticker)[0] + '.jpeg')
 '''
 
 
@@ -25,7 +25,7 @@ def save_plot(type, ticker):
 check the last modification date if the stock data exists
 '''
 def check_modi_date(ticker):
-    mtime = os.path.getmtime(mp.dir_data_stocks + '{}.csv'.format(ticker))
+    mtime = os.path.getmtime(mp.DIR_DATA_STOCKS + '{}.csv'.format(ticker))
     mtime = datetime.datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
     mtime = datetime.datetime.strptime(mtime, '%Y-%m-%d')
     now = datetime.datetime.today()
@@ -50,7 +50,7 @@ def yahoo_api(ticker):
     #stock_df['Date'] = np.array([datetime.datetime.strptime(str(t)[:10], '%Y-%m-%d').date() for t in stock_Date])
     #stock_df = stock_df[['Date', 'Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']]
     stock_df_save = stock_df.sort_values(by='Date', ascending=False)
-    stock_df_save.to_csv(mp.dir_data_stocks + '{}.csv'.format(ticker), index=True, encoding='utf_8_sig')
+    stock_df_save.to_csv(mp.DIR_DATA_STOCKS + '{}.csv'.format(ticker), index=True, encoding='utf_8_sig')
     time.sleep(SLEEP_TIME*3)
     return stock_df
 
@@ -69,13 +69,13 @@ def fetch_yahoo_data(ticker):
         modi = check_modi_date(ticker)
         if modi[0] == True:
             print("Last updated time for {}: {}".format(name, modi[1]))
-            os.remove(mp.dir_data_stocks + '{}.csv'.format(ticker))
+            os.remove(mp.DIR_DATA_STOCKS + '{}.csv'.format(ticker))
             time.sleep(SLEEP_TIME)
             print("Fetching {}'s data...".format(name))
             stock_df = yahoo_api(ticker)
         else:
             print("Data is up-to-date")
-            stock_df = pd.read_csv(mp.dir_data_stocks + '{}.csv'.format(ticker), index_col='Date')
+            stock_df = pd.read_csv(mp.DIR_DATA_STOCKS + '{}.csv'.format(ticker), index_col='Date')
             stock_df = stock_df.sort_values(by='Date', ascending=True)
     else:
         print("Has old data: %s" % False)
@@ -83,6 +83,7 @@ def fetch_yahoo_data(ticker):
         stock_df = yahoo_api(ticker)
 
     print("***Stock data saved/updated***")
+    print("\n")
     return stock_df
 
 
@@ -91,7 +92,7 @@ take a string of country
 print out the country's ticker-name mapping
 '''
 def check_ticker_by_country(country):
-    ticker_df = pd.read_csv(mp.dir_ta + 'Yahoo_Ticker_Symbols_Sep2017.csv')
+    ticker_df = pd.read_csv(mp.DIR_TA + 'Yahoo_Ticker_Symbols_Sep2017.csv')
     ticker_df = ticker_df[ticker_df.Country == country].sort_values(by='Ticker')
     ticker_dict_country = dict(zip(ticker_df.Ticker, ticker_df.Name))
     keys = list(ticker_dict_country.keys())
@@ -105,7 +106,7 @@ take a string of ticker
 return the name of the ticker
 '''
 def check_all_ticker(ticker):
-    ticker_df = pd.read_csv(mp.dir_ta + 'Yahoo_Ticker_Symbols_Sep2017.csv')
+    ticker_df = pd.read_csv(mp.DIR_TA + 'Yahoo_Ticker_Symbols_Sep2017.csv')
     ticker_dict = dict(zip(ticker_df.Ticker, ticker_df.Name))
     try:
         return [ticker_dict[ticker], True]
@@ -119,7 +120,7 @@ check if the ticker's .csv file already exists
 if exists, remove the file
 '''
 def check_stock_data_exist(ticker):
-    if os.path.exists(mp.dir_data_stocks + '{}.csv'.format(ticker)):
+    if os.path.exists(mp.DIR_DATA_STOCKS + '{}.csv'.format(ticker)):
         return True
     else:
         return False

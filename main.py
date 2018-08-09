@@ -16,9 +16,11 @@ Dependent-modules/packages:
 
 import sys
 import module_path as mp
-sys.path.append(mp.dir_ta)
+sys.path.append(mp.DIR_TA)
+sys.path.append(mp.DIR_MARKET)
 
 from ta_indicators import analyze
+from news import get_news
 
 if __name__ == '__main__':
     print("Welcome to the investment information feed(iif) system!")
@@ -42,7 +44,7 @@ if __name__ == '__main__':
             elif ope == '2':
                 analyze()
             elif ope == '3':
-                print('3')
+                get_news()
             elif ope == 'q':
                 break
             else:
