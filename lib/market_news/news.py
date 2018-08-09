@@ -3,8 +3,9 @@ import module_path as mp
 from ticker_list import get_ticker_list
 
 def get_news():
-    print("Do you want to update ticker list from HKEX?")
-    update = input("[y/n]")
+    print("*******************************************************")
+    print("Do you want to update ticker list from HKEX? (It may take a while)")
+    update = input("[y/n] ")
     if update.lower() == 'y':
         get_ticker_list()
     elif update.lower() == 'n':
