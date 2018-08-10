@@ -55,11 +55,11 @@ def parse_table(df, text, sec_type, col_ext):
     return df
 
 
-def crawl_data(lang):
+def crawl_hkex_tickers(lang):
     global driver
     if lang == 'en':
         driver = webdriver.Chrome()
-        time.sleep(SLEEP_TIME)
+        driver.set_page_load_timeout(10)
         #driver.maximize_window()
 
     df = pd.DataFrame(columns=COLS)
@@ -109,8 +109,8 @@ def crawl_data(lang):
 def get_ticker_list():
     print("Fetching ticker information list from HKEX...")
 
-    df_en = crawl_data('en')
-    df_zh = crawl_data('zh-HK')
+    df_en = crawl_hkex_tickers('en')
+    df_zh = crawl_hkex_tickers('zh-HK')
 
     df_en['Chin_Name'] = df_zh.Name
     df = df_en[['Ticker','Name', 'Chin_Name', 'Price', 'Turnover', 'Market_Cap', 'PE', 'Dividen', 'Security_type']]
@@ -125,6 +125,7 @@ def get_ticker_list():
     df = df.sort_values(by='Ticker')
 
     print("Saving ticker information...")
-    df.to_csv(mp.DIR_DATA_NEWS + 'ticker_info_list_HKEX.csv', index=False, encoding='utf_8_sig')
+    df.to_csv(mp.DIR_DATA_NEWS + 'ticker_info_list_hkex.csv', index=False, encoding='utf_8_sig')
     time.sleep(SLEEP_TIME)
     print("Done")
+    print("\n")
