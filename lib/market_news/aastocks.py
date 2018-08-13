@@ -1,3 +1,4 @@
+import re
 import time
 import requests
 import pandas as pd
@@ -11,8 +12,16 @@ URL_HEAD = 'http://www.aastocks.com'
 
 ##### helpers ##################################################################
 
-def check_time():
-
+def check_time(new_datetime, latest_update):
+    if latest_update == []:
+        return False
+    else:
+        if new_datetime[0] < latest_update[0] or (new_datetime[0] == latest_update[0] and new_datetime[1] < latest_update[1]):
+            return True
+        elif new_datetime[0] == latest_update[0] and new_datetime[1] == latest_update[1]:
+            return True
+        else:
+            return False
 
 
 def print_progress(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█'):
@@ -28,8 +37,8 @@ def print_progress(iteration, total, prefix = '', suffix = '', decimals = 1, len
         fill        - Optional  : bar fill character (Str)
     """
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
+    filled_length = int(length * iteration // total)
+    bar = fill * filled_length + '-' * (length - filled_length)
     print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
 
     if iteration == total:
@@ -37,6 +46,7 @@ def print_progress(iteration, total, prefix = '', suffix = '', decimals = 1, len
 
 
 def parse_content(text):
+    code_patt = re.compile(r'\([a-z]{2}/[a-z]{1,2}\)')
     soup = BeautifulSoup(text, 'lxml')
     try:
         soup.span.extract()
@@ -49,8 +59,38 @@ def parse_content(text):
     sub_index = [i for i, char in enumerate(soup.text) if char == '。']
     if len(sub_index) > 0:
         content = soup.text[:sub_index[-1]+1]
+
         end_index = content.find('(報價延遲')
-        return content[:end_index]
+        if end_index == -1:
+            pass
+        else:
+            content = content[:end_index]
+
+        end_index = content.find('免責聲明：')
+        if end_index == -1:
+            pass
+        else:
+            content = content[:end_index]
+
+        end_index = content.find('本文件由香港上海匯豐銀行有限公司')
+        if end_index == -1:
+            pass
+        else:
+            content = content[:end_index]
+
+        end_index = content.find(' 阿思達克財經新聞網址: ')
+        if end_index == -1:
+            pass
+        else:
+            content = content[:end_index]
+
+        has_code = code_patt.search(content)
+        if has_code == None:
+            pass
+        else:
+            content = content[:has_code.span()[0]]
+
+        return content
     else:
         return ''
 
@@ -86,6 +126,8 @@ def parse_mega_data(text, latest_update):
             continue
         else:
             date, time = datetime_tag[0].get_text().split(' ')
+            if check_time([date, time], latest_update):
+                break
             for a in div.find_all('a'):
                 link = URL_HEAD + a.attrs['href']
                 if link in df.iloc[:,2].unique():      # handle the replicates created before
@@ -98,7 +140,7 @@ def parse_mega_data(text, latest_update):
 
 def crawl_aastocks_news(latest_update):
     driver = webdriver.Chrome()
-    driver.set_page_load_timeout(10)
+    driver.set_page_load_timeout(20)
     driver.get('http://www.aastocks.com/tc/stocks/news/aafn/latest-news')
     for j in range(3):                 # the larger the range, the more the news will be crawled
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight)") # scroll to the bottom
@@ -118,13 +160,21 @@ def crawl_aastocks_news(latest_update):
 
 def get_aastocks_news():
     print("*******************************************************")
-    print("Fetching News from Aastocks.com...")
-    old_df = pd.read_csv(mp.DIR_DATA_NEWS + 'aastocks_news.csv')
-    latest_update = [str(old_df.loc[0, 'Date']), old_df.loc[0, 'Time']]
-    print("The latest news is up to:", latest_update[0], latest_update[1])
+    try:
+        old_df = pd.read_csv(mp.DIR_DATA_NEWS + 'aastocks_news.csv')
+        latest_update = [str(old_df.loc[0, 'Date']), old_df.loc[0, 'Time']]
+        print("The latest news is up to:", latest_update[0], latest_update[1])
+    except:
+        print("No existing data!")
+        latest_update = []
+    print("Fetching news updates from Aastocks.com...")
 
     new_df = crawl_aastocks_news(latest_update)
     new_df = get_content(new_df)
+    if latest_update == []:
+        pass
+    else:
+        new_df = new_df.append(old_df, ignore_index=True)
 
     print("Saving news...")
     new_df.to_csv(mp.DIR_DATA_NEWS + 'aastocks_news.csv', index=False, encoding='utf_8_sig')

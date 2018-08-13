@@ -68,7 +68,7 @@ def fetch_yahoo_data(ticker):
         print("Has old data: %s" % True)
         modi = check_modi_date(ticker)
         if modi[0] == True:
-            print("Last updated time for {}: {}".format(name, modi[1]))
+            print("Last updated time for {}: {}".format(name, str(modi[1])[:10]))
             os.remove(mp.DIR_DATA_STOCKS + '{}.csv'.format(ticker))
             time.sleep(SLEEP_TIME)
             print("Fetching {}'s data...".format(name))
@@ -166,8 +166,8 @@ return the processed string for calling yahoo APIs
 (only support HK, CN and US)
 '''
 def tick_process(ticker):
-    dot_patt = re.compile('^[0-9]+\.[a-zA-Z]+$')
-    plain_patt = re.compile('^[a-zA-Z]+$')
+    dot_patt = re.compile(r'^[0-9]+\.[a-zA-Z]+$')
+    plain_patt = re.compile(r'^[a-zA-Z]+$')
     is_dot = dot_patt.match(ticker)
     is_plain = plain_patt.match(ticker)
 

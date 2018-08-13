@@ -17,7 +17,7 @@ from rsi import rsi
 
 INDICATORS = {'1': 'B-Bands', '2': 'CCI', '3':'KDJ', '4': 'MACD', '5': 'OBV', '6': 'Parabolic SAR', '7':'RSI'}
 
-def analyze():
+def technical_analyze():
     print("*******************************************************")
     print("Enter your client\'s id (number only):")
     cus_id = input()
@@ -53,4 +53,4 @@ def analyze():
 
 
 if __name__ == '__main__':
-    analyze()
+    technical_analyze()

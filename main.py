@@ -19,7 +19,7 @@ import module_path as mp
 sys.path.append(mp.DIR_TA)
 sys.path.append(mp.DIR_MARKET)
 
-from ta_indicators import analyze
+from ta_indicators import technical_analyze
 from news import get_news
 
 if __name__ == '__main__':
@@ -42,7 +42,7 @@ if __name__ == '__main__':
             if ope == '1':
                 print('1')
             elif ope == '2':
-                analyze()
+                technical_analyze()
             elif ope == '3':
                 get_news()
             elif ope == 'q':

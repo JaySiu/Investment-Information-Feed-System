@@ -59,7 +59,7 @@ def crawl_hkex_tickers(lang):
     global driver
     if lang == 'en':
         driver = webdriver.Chrome()
-        driver.set_page_load_timeout(10)
+        driver.set_page_load_timeout(20)
         #driver.maximize_window()
 
     df = pd.DataFrame(columns=COLS)
@@ -67,9 +67,9 @@ def crawl_hkex_tickers(lang):
         driver.get(link + lang)
         time.sleep(SLEEP_TIME*2)
 
-        stock_code = driver.find_element_by_xpath("//th[@class='text']")     # find the "Stock Code" button
-        stock_code.click()                   # Click the button to sort in asc order
-        time.sleep(SLEEP_TIME)
+        #stock_code = driver.find_element_by_xpath("//th[@class='text']")     # find the "Stock Code" button
+        #stock_code.click()                   # Click the button to sort in asc order
+        #time.sleep(SLEEP_TIME)
         try:
             show_items = driver.find_element_by_xpath("//div[@class='loadmore_update dropdown']")    # find the dropdown at the bottom
             show_items.click()
