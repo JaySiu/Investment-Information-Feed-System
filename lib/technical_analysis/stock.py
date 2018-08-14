@@ -111,7 +111,7 @@ def check_all_ticker(ticker):
     try:
         return [ticker_dict[ticker], True]
     except:
-        return ["{}'s data not found!".format(ticker), False]
+        return ["{}'s name data not found!".format(ticker), False]
 
 
 '''

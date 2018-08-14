@@ -98,22 +98,25 @@ def parse_content(text):
 def get_content(df):
     print("Parsing {} news content...".format(len(df)))
     df['Content'] = ''
-    print_progress(0, len(df), prefix = 'Progress:', suffix = 'Complete', length = 50)
-    for i, row in df.iterrows():
-        page = requests.get(row.Link)
-        time.sleep(SLEEP_TIME/2)
-        if page.status_code == 200:
-            print_progress(i+1, len(df), prefix = 'Progress:', suffix = 'Complete', length = 50)
-            content = page.content.decode()
-            start_index = content.find('<p>') + 3
-            end_index = content.find('</p>', start_index)
-            content = content[start_index:end_index]
-            content = parse_content(content)
-            if content == '':
-                df.loc[i, 'Content'] = 'No Content'
-            else:
-                df.loc[i, 'Content'] = content
-    return df
+    if len(df) == 0:
+        return df
+    else:
+        print_progress(0, len(df), prefix = 'Progress:', suffix = 'Complete', length = 50)
+        for i, row in df.iterrows():
+            page = requests.get(row.Link)
+            time.sleep(SLEEP_TIME/2)
+            if page.status_code == 200:
+                print_progress(i+1, len(df), prefix = 'Progress:', suffix = 'Complete', length = 50)
+                content = page.content.decode()
+                start_index = content.find('<p>') + 3
+                end_index = content.find('</p>', start_index)
+                content = content[start_index:end_index]
+                content = parse_content(content)
+                if content == '':
+                    df.loc[i, 'Content'] = 'No Content'
+                else:
+                    df.loc[i, 'Content'] = content
+        return df
 
 
 def parse_mega_data(text, latest_update):
@@ -174,6 +177,7 @@ def get_aastocks_news():
     if latest_update == []:
         pass
     else:
+        print("Merging data...")
         new_df = new_df.append(old_df, ignore_index=True)
 
     print("Saving news...")

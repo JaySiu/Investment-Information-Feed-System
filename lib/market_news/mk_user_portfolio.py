@@ -4,7 +4,7 @@ import module_path as mp
 
 '''
 return a list of a client's stocks
-(tickers with no yahoo finance data removed)
+(tickers with no yahoo finance data NOT removed)
 '''
 def get_client_tickers(cus_id):
     id = 'scb_' + cus_id
@@ -15,7 +15,6 @@ def get_client_tickers(cus_id):
     ticker_list = list(set(customers_df['Symbol']))
     if len(ticker_list) > 0:
         ticker_list = [(4-len(str(tk)))*'0' + str(tk) +'.HK' for tk in ticker_list]
-        remove_tk_list = []
         print("Customer {} has the following equities in his/her portfolio:".format(id))
         for i, tk in enumerate(ticker_list):
             found = stock.check_all_ticker(tk)
@@ -23,9 +22,6 @@ def get_client_tickers(cus_id):
                 print(str(i+1) + ')', tk + ' - ' + found[0])
             else:
                 print(str(i+1) + ')', found[0])
-                remove_tk_list.append(tk)
-        for tk in remove_tk_list:
-            ticker_list.remove(tk)
         print("\n")
         return ticker_list
     else:
