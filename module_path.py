@@ -1,4 +1,6 @@
 # directory paths for the modules/packages
+DIR_ASSETS = 'lib/assets_management/'
+
 DIR_TA = 'lib/technical_analysis/'
 
 DIR_MARKET = 'lib/market_news/'

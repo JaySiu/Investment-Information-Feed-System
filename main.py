@@ -16,9 +16,11 @@ Dependent-modules/packages:
 
 import sys
 import module_path as mp
+sys.path.append(mp.DIR_ASSETS)
 sys.path.append(mp.DIR_TA)
 sys.path.append(mp.DIR_MARKET)
 
+from mpt import optimize_portfolio
 from ta_indicators import technical_analyze
 from news import get_news
 
@@ -40,7 +42,7 @@ if __name__ == '__main__':
             print("3) Market News")
             ope = input().lower()
             if ope == '1':
-                print('1')
+                optimize_portfolio()
             elif ope == '2':
                 technical_analyze()
             elif ope == '3':
