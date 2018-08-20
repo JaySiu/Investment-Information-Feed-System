@@ -1,7 +1,6 @@
 import stock
 import numpy as np
 import pandas as pd
-import statistics as stat
 import module_path as mp
 
 
@@ -15,7 +14,7 @@ def get_expected_returns(closes):
     expected_return_list = []
     for c in closes:
         expected_return_list.append(np.mean(c.pct_change().dropna(axis=0)))
-    return expected_return_list
+    return np.asmatrix(expected_return_list)
 
 
 def get_var_cov_matrix(closes):
