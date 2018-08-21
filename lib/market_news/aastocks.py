@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 SLEEP_TIME = 1
 COLS = ['Date', 'Time', 'Link', 'Title', 'Content']
 URL_HEAD = 'http://www.aastocks.com'
+AASTOCKS_NEWS = 'http://www.aastocks.com/tc/stocks/news/aafn/latest-news'
 
 ##### helpers ##################################################################
 
@@ -144,7 +145,7 @@ def parse_mega_data(text, latest_update):
 def crawl_aastocks_news(latest_update):
     driver = webdriver.Chrome()
     driver.set_page_load_timeout(20)
-    driver.get('http://www.aastocks.com/tc/stocks/news/aafn/latest-news')
+    driver.get(AASTOCKS_NEWS)
     for j in range(3):                 # the larger the range, the more the news will be crawled
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight)") # scroll to the bottom
         time.sleep(SLEEP_TIME)

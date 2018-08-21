@@ -38,10 +38,10 @@ def check_modi_date(ticker):
 call the yahoo finance API to download data
 save the data to .csv file
 '''
-def yahoo_api(ticker):
+def yahoo_api(ticker, period):
     print("!-- API may return an error, just re-run the program --!")
     end = datetime.datetime.today()
-    start = end - datetime.timedelta(weeks=52)
+    start = end - datetime.timedelta(weeks=period)
     stock_df = yf.download(ticker, start=start, end=end)    # return a DataFrame
     time.sleep(SLEEP_TIME)
     #stock_df_cvs = stock_df
@@ -61,7 +61,7 @@ call yahoo_api() function
 return a copy of the DataFrame with added 'Date' column (from the index)
 improve performance by checking if some data exists
 '''
-def fetch_yahoo_data(ticker):
+def fetch_yahoo_data(ticker, period=52):
     name = check_all_ticker(ticker)[0]
     print("Checking {}'s data...".format(name))
     if check_stock_data_exist(ticker):
@@ -72,7 +72,7 @@ def fetch_yahoo_data(ticker):
             os.remove(mp.DIR_DATA_STOCKS + '{}.csv'.format(ticker))
             time.sleep(SLEEP_TIME)
             print("Fetching {}'s data...".format(name))
-            stock_df = yahoo_api(ticker)
+            stock_df = yahoo_api(ticker, period)
         else:
             print("Data is up-to-date")
             stock_df = pd.read_csv(mp.DIR_DATA_STOCKS + '{}.csv'.format(ticker), index_col='Date')
@@ -80,7 +80,7 @@ def fetch_yahoo_data(ticker):
     else:
         print("Has old data: %s" % False)
         print("Fetching {}'s data...".format(name))
-        stock_df = yahoo_api(ticker)
+        stock_df = yahoo_api(ticker, period)
 
     print("***Stock data saved/updated***")
     print("\n")
