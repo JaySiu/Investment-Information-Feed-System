@@ -17,7 +17,7 @@ def get_client_tickers(cus_id):
         ticker_list = [(4-len(str(tk)))*'0' + str(tk) +'.HK' for tk in ticker_list]
         remove_tk_list = []
         print("Customer {} has the following equities in his/her portfolio:".format(id))
-        for i, tk in enumerate(ticker_list):
+        for i, tk in enumerate(sorted(ticker_list)):
             found = stock.check_all_ticker(tk)
             if found[1] == True:
                 print(str(i+1) + ')', tk + ' - ' + found[0])

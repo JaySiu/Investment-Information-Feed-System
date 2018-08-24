@@ -16,7 +16,7 @@ return a list of expected returns (float) of the assets
 def get_expected_returns(closes):
     expected_return_list = []
     for c in closes:
-        expected_return_list.append(np.mean(c.pct_change(periods=30).dropna(axis=0)))
+        expected_return_list.append(np.mean(c.pct_change(periods=13*7).dropna(axis=0)))
     return np.asmatrix(expected_return_list)
 
 
@@ -45,7 +45,7 @@ def get_client_tickers(cus_id):
         ticker_list = [(4-len(str(tk)))*'0' + str(tk) +'.HK' for tk in ticker_list]
         remove_tk_list = []
         print("Customer {} has the following equities in his/her portfolio:".format(id))
-        for i, tk in enumerate(ticker_list):
+        for i, tk in enumerate(sorted(ticker_list)):
             found = stock.check_all_ticker(tk)
             if found[1] == True:
                 print(str(i+1) + ')', tk + ' - ' + found[0])
@@ -69,4 +69,4 @@ def get_risk_free_rate():
     end_index = source_code.find('Daily Treasury Bill Rates', start_index)
     driver.quit()
     soup = BeautifulSoup(source_code[start_index+18:end_index], "lxml")
-    return float(soup.find_all('td')[3].get_text())
+    return float(soup.find_all('td')[-6].get_text())
