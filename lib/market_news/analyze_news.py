@@ -43,7 +43,6 @@ def portfolio_news_mapping(cus_id, portfolio, news_source):
     map_df = map_df.set_index(['Cus_ID', 'Ticker'])
     print("Saving news related to the customer...")
     map_df.to_csv(mp.DIR_DATA_CUSTOMERS + 'customer_related_news.csv', index=True, encoding='utf_8_sig')
-    print("Done\n")
 
 
 ################################################################################
@@ -60,3 +59,4 @@ def analyze_news():
 
     if cus_ticker_list != []:
         portfolio_news_mapping('scb_' + cus_id, cus_ticker_list, 'aastocks')
+        print("\n")

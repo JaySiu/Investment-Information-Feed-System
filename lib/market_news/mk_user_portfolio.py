@@ -1,6 +1,13 @@
+import os
 import stock
 import pandas as pd
 import module_path as mp
+
+
+def retrieve_client_news():
+    if os.path.exists(mp.DIR_DATA_CUSTOMERS + 'customer_related_news.csv'):
+        return pd.read_csv(mp.DIR_DATA_CUSTOMERS + 'customer_related_news.csv')
+
 
 '''
 return a list of a client's stocks

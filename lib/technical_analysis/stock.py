@@ -98,7 +98,7 @@ def check_ticker_by_country(country):
     keys = list(ticker_dict_country.keys())
     keys.sort()
     for k in keys:
-        print(k, ticker_dict_country[k])            # $chcp 65001 may be needed
+        print(k, ticker_dict_country[k])            # $chcp 936 may be needed
 
 
 '''

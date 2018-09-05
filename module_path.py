@@ -12,3 +12,5 @@ DIR_DATA_NEWS = 'data/news/'
 DIR_DATA_PLOTS = 'data/plots/'
 
 DIR_DATA_STOCKS = 'data/stocks/'
+
+DIR_ML = DIR_MARKET + 'model/'

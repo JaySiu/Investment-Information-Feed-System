@@ -19,6 +19,7 @@ import module_path as mp
 sys.path.append(mp.DIR_ASSETS)
 sys.path.append(mp.DIR_TA)
 sys.path.append(mp.DIR_MARKET)
+sys.path.append(mp.DIR_ML)
 
 from mpt import optimize_portfolio
 from ta_indicators import technical_analyze
