@@ -171,17 +171,20 @@ def get_aastocks_news():
     except:
         print("No existing data!")
         latest_update = []
-    print("Fetching news updates from Aastocks.com...")
 
-    new_df = crawl_aastocks_news(latest_update)
-    new_df = get_content(new_df)
-    if latest_update == []:
-        pass
+    if latest_update != []:
+        print("Fetching news updates from Aastocks.com...")
+        new_df = crawl_aastocks_news(latest_update)
+        new_df = get_content(new_df)
+        if len(new_df) == 0:
+            pass
+        else:
+            print("Merging data...")
+            new_df = new_df.append(old_df, ignore_index=True)
+            print("Saving news...")
+            new_df.to_csv(mp.DIR_DATA_NEWS + 'aastocks_news.csv', index=False, encoding='utf_8_sig')
+            time.sleep(SLEEP_TIME)
+        print("Done")
+        return True
     else:
-        print("Merging data...")
-        new_df = new_df.append(old_df, ignore_index=True)
-
-    print("Saving news...")
-    new_df.to_csv(mp.DIR_DATA_NEWS + 'aastocks_news.csv', index=False, encoding='utf_8_sig')
-    time.sleep(SLEEP_TIME)
-    print("Done")
+        return False

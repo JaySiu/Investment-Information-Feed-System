@@ -14,7 +14,7 @@ STOPWORDS = []
 ##### helpers ##################################################################
 
 def tokenize(text):
-    return jieba.lcut(preprocess_text(text))
+    return list(set(jieba.lcut(preprocess_text(text))))
 
 
 def preprocess_text(text):
@@ -100,7 +100,7 @@ def nlp():
     jieba.set_dictionary(mp.DIR_ML + 'dict.txt.big')
     global STOPWORDS
     STOPWORDS = read_stopwords_zh()
-    #clear_up_stopwords()
+    #clear_up_stopwords()           # umcomment this line to clean up the stopwords dict
     #print(len(STOPWORDS))
     classifier_NB = train_NB()
 
@@ -112,7 +112,7 @@ def nlp():
         else:
             words = tokenize(row.Content)
             target_list = remove_number(create_features(words))
-            print(target_list)
+            #print(target_list)
             positive = 0
             for f in target_list:
                 if classifier_NB.classify(f) == 'positive':
@@ -124,7 +124,7 @@ def nlp():
             else:
                 results.append("negative")
     df['NB_score'] = results
-    df.to_csv(mp.DIR_DATA_CUSTOMERS + 'customer_related_news.csv', index=True, encoding='utf_8_sig')
+    df.to_csv(mp.DIR_DATA_CUSTOMERS + 'customer_related_news.csv', index=False, encoding='utf_8_sig')
 
 if __name__ == '__main__':
     nlp()
