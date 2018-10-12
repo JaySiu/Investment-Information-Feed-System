@@ -35,7 +35,9 @@ def cal_plot_kdj(ticker):
 
     fig.tight_layout()
     fig.subplots_adjust(hspace=0, top=0.95)
-    plt.show()
+    #plt.show()
+    stock.save_plot('KDJ', ticker)
+
 ################################################################################
 
 def kdj(cus_ticker_list):

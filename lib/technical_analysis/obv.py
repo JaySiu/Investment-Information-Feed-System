@@ -32,7 +32,9 @@ def cal_plot_obv(ticker):
 
     fig.tight_layout()
     fig.subplots_adjust(hspace=0, top=0.95)
-    plt.show()
+    #plt.show()
+    stock.save_plot('OBV', ticker)
+
 ################################################################################
 
 def obv(cus_ticker_list):
@@ -52,7 +54,7 @@ def obv(cus_ticker_list):
         elif ticker == 'cn':
             stock.check_ticker_by_country('China')
         elif ticker == '':
-            print("Invalid ticker!")    
+            print("Invalid ticker!")
         else:
             print("\n")
             cal_plot_obv(ticker)

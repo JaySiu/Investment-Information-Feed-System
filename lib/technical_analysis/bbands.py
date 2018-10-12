@@ -43,8 +43,8 @@ def cal_plot_bband(ticker):
     plt.setp(plt.gca().get_xticklabels())
     fig.tight_layout()
     fig.subplots_adjust(hspace=0, top=0.95)
-    plt.show()
-
+    #plt.show()
+    stock.save_plot('BBANDS', ticker)
 
 '''
 Other ways to plot:

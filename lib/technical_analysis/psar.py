@@ -29,7 +29,9 @@ def cal_plot_psar(ticker, step=0.02, max_step=0.2):
 
     fig.tight_layout()
     fig.subplots_adjust(top=0.95)
-    plt.show()
+    #plt.show()
+    stock.save_plot('PSAR', ticker)
+
 ################################################################################
 
 def psar(cus_ticker_list):

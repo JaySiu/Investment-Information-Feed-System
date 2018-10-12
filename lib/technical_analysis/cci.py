@@ -34,7 +34,9 @@ def cal_plot_cci(ticker, period):
 
     fig.tight_layout()
     fig.subplots_adjust(hspace=0, top=0.95)
-    plt.show()
+    #plt.show()
+    stock.save_plot('CCI', ticker)
+
 ################################################################################
 
 def cci(cus_ticker_list):

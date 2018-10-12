@@ -14,11 +14,10 @@ SLEEP_TIME = 1
 
 '''
 save the plot to data/plots directory
-
-def save_plot(type, ticker):
-    Print("Saving the plot...")
-    plt.savefig(mp.DIR_DATA_PLOTS + type + ' - ' + check_all_ticker(ticker)[0] + '.jpeg')
 '''
+def save_plot(type, ticker):
+    print("Saving the plot...")
+    plt.savefig(mp.DIR_DATA_PLOTS + type + ' - ' + check_all_ticker(ticker)[0] + '.jpeg')
 
 
 '''

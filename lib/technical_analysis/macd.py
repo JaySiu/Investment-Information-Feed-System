@@ -151,7 +151,8 @@ def plot_HSI_MACD(arr_date, close_prices, avg_fast, avg_slow, macd, macd_signal,
 
     plt.tight_layout()          # prevent overlapping
     fig.subplots_adjust(top=0.9)
-    plt.show()
+    #plt.show()
+    stock.save_plot('MACD', ticker)
 
 ################################################################################
 

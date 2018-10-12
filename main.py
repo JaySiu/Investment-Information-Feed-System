@@ -25,13 +25,15 @@ from mpt import optimize_portfolio
 from ta_indicators import technical_analyze
 from news import get_news
 
-if __name__ == '__main__':
+
+def main():
     print("Welcome to the investment information feed(iif) system!")
     print("*******************************************************")
-    print("Please select your identity:")
-    print("1) RM")
-    print("2) client")
-    iden = input()
+    #print("Please select your identity:")
+    #print("1) RM")
+    #print("2) client")
+    #iden = input()
+    iden = '1'
     if iden == '1':
         ope = ''
         while ope != 'q':
@@ -52,3 +54,7 @@ if __name__ == '__main__':
                 break
             else:
                 print("Please enter a valid input")
+
+
+if __name__ == '__main__':
+    main()

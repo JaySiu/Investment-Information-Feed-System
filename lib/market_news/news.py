@@ -18,7 +18,7 @@ def get_news():
     elif update.lower() == 'n':
         if os.path.exists(mp.DIR_DATA_NEWS + 'ticker_info_list_HKEX.csv'):
             print("Ticker list information exists")
-        else:
+        else: 
             print("No ticker list information exists!")
             get_ticker_list()
 
