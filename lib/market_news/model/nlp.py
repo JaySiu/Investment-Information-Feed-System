@@ -120,7 +120,7 @@ def nlp():
             if positive > (len(target_list) - positive - check_seen(target_list)):
                 results.append("positive")
             elif positive == (len(target_list) - positive - check_seen(target_list)):
-                results.append("netural")
+                results.append("neutral")
             else:
                 results.append("negative")
     df['NB_score'] = results
