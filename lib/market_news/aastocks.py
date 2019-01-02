@@ -108,15 +108,18 @@ def get_content(df):
             time.sleep(SLEEP_TIME/2)
             if page.status_code == 200:
                 print_progress(i+1, len(df), prefix = 'Progress:', suffix = 'Complete', length = 50)
-                content = page.content.decode()
-                start_index = content.find('<p>') + 3
-                end_index = content.find('</p>', start_index)
-                content = content[start_index:end_index]
-                content = parse_content(content)
-                if content == '':
+                try:
+                    content = page.content.decode()
+                    start_index = content.find('<p>') + 3
+                    end_index = content.find('</p>', start_index)
+                    content = content[start_index:end_index]
+                    content = parse_content(content)
+                    if content == '':
+                        df.loc[i, 'Content'] = 'No Content'
+                    else:
+                        df.loc[i, 'Content'] = content
+                except:
                     df.loc[i, 'Content'] = 'No Content'
-                else:
-                    df.loc[i, 'Content'] = content
         return df
 
 
@@ -125,7 +128,7 @@ def parse_mega_data(text, latest_update):
     soup = BeautifulSoup(text, "lxml")
     for div in soup.find_all('div'):    # this would replicates the <a> tags
         # get date and time: e.g. [<div class="newstime4">2018/07/19 14:29</div>, <div class="newstime4"></div>]
-        datetime_tag = div.find_all(name='div', attrs={'class': 'newstime4'})
+        datetime_tag = div.find_all(name='div', attrs={'class': 'inline_block'})
         if len(datetime_tag) == 0:
             continue
         else:
