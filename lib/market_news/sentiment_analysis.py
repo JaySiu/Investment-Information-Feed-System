@@ -28,8 +28,8 @@ def get_news_sentiment():
             s = SnowNLP(row.Content)
             sentences_sen = []
             for sentence in s.sentences:
-                s = SnowNLP(sentence)
-                sentences_sen.append(s.sentiments)
+                ss = SnowNLP(sentence)
+                sentences_sen.append(ss.sentiments)
             mean_score = np.mean(np.array(sentences_sen))
             s = SnowNLP(row.Title)
             score = TITLE_WEIGHT * s.sentiments + CONTENT_WEIGHT * mean_score
